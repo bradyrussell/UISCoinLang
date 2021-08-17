@@ -33,7 +33,7 @@ structType:
     ID
     ;
 
-booleanLiteral: 'true' | 'false' | 'null';
+booleanLiteral: trueliteral='true' | falseliteral='false' | nullliteral='null';
 
 arrayInitializer
     : '{' exprList? '}'

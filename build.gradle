@@ -97,14 +97,6 @@ task copyJavadoc(type: Copy) {
 	into "docs"
 }
 
-task copyAntlrGeneratedFiles(type: Copy) {
-	dependsOn("generateGrammarSource")
-	from layout.buildDirectory.dir("generated-src/antlr/main")
-	into "src/com/bradyrussell/uiscoin/lang/generated"
-}
-compileJava.dependsOn('copyAntlrGeneratedFiles')
-sourcesJar.dependsOn('copyAntlrGeneratedFiles')
-
 spotless {
 	format 'misc', {
 		target '*.gradle', '*.md', '.gitignore'
@@ -119,6 +111,15 @@ spotless {
 		licenseHeader '/* (C) Brady Russell $YEAR */'
 	}
 }
+
+task copyAntlrGeneratedFiles(type: Copy) {
+	dependsOn("generateGrammarSource")
+	from layout.buildDirectory.dir("generated-src/antlr/main")
+	into "src/com/bradyrussell/uiscoin/lang/generated"
+}
+compileJava.dependsOn('copyAntlrGeneratedFiles')
+sourcesJar.dependsOn('copyAntlrGeneratedFiles')
+spotlessJava.dependsOn('copyAntlrGeneratedFiles')
 
 task preCommit() {
 	dependsOn("clean", "generateGrammarSource", "copyAntlrGeneratedFiles", "spotlessApply", "test", "javadoc", "copyJavadoc")

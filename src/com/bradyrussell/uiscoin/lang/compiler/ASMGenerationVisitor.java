@@ -150,13 +150,20 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitBooleanLiteral(UISCParser.BooleanLiteralContext ctx) {
-        return ctx.getText();
+        if(ctx.nullliteral != null) {
+            return ASMUtil.generateComment("Null literal "+ctx.getText()) + "null";
+        }
+        if(ctx.trueliteral != null) {
+            return ASMUtil.generateComment("True literal "+ctx.getText()) + "true";
+        }
+        if(ctx.falseliteral != null) {
+            return ASMUtil.generateComment("False literal "+ctx.getText()) + "false";
+        }
+        //return ctx.getText(); // this was more elegant but the above is more resistant to future changes
+        return "";
     }
 
     /** End Literals */
-
-
-
 
     /**
      * Begin Initialization
