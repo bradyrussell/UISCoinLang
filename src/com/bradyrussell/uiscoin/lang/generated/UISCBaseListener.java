@@ -629,18 +629,6 @@ public class UISCBaseListener implements UISCListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAndOrExpression(UISCParser.AndOrExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAndOrExpression(UISCParser.AndOrExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterMultDivExpression(UISCParser.MultDivExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -888,6 +876,18 @@ public class UISCBaseListener implements UISCListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAddSubExpression(UISCParser.AddSubExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

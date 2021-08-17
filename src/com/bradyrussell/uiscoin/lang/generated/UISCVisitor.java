@@ -345,13 +345,6 @@ public interface UISCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModuloExpression(UISCParser.ModuloExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code andOrExpression}
-	 * labeled alternative in {@link UISCParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAndOrExpression(UISCParser.AndOrExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code multDivExpression}
 	 * labeled alternative in {@link UISCParser#expression}.
 	 * @param ctx the parse tree
@@ -498,6 +491,13 @@ public interface UISCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAddSubExpression(UISCParser.AddSubExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code andOrXorExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code equalityExpression}
 	 * labeled alternative in {@link UISCParser#expression}.

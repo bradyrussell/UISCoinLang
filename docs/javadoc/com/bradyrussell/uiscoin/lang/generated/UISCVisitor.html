@@ -144,9 +144,9 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="UISCVisitor.html" title="type parameter in UISCVisitor">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></span>&#8203;(<a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></span>&#8203;(<a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
-<div class="block">Visit a parse tree produced by the <code>andOrExpression</code>
+<div class="block">Visit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
@@ -1431,20 +1431,6 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></h3>
-<div class="memberSignature"><span class="returnType"><a href="UISCVisitor.html" title="type parameter in UISCVisitor">T</a></span>&nbsp;<span class="memberName">visitAndOrExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Visit a parse tree produced by the <code>andOrExpression</code>
- labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ctx</code> - the parse tree</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the visitor result</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="visitMultDivExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.MultDivExpressionContext)">visitMultDivExpression</a></h3>
 <div class="memberSignature"><span class="returnType"><a href="UISCVisitor.html" title="type parameter in UISCVisitor">T</a></span>&nbsp;<span class="memberName">visitMultDivExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.MultDivExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.MultDivExpressionContext</a>&nbsp;ctx)</span></div>
 <div class="block">Visit a parse tree produced by the <code>multDivExpression</code>
@@ -1728,6 +1714,20 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 <h3><a id="visitAddSubExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AddSubExpressionContext)">visitAddSubExpression</a></h3>
 <div class="memberSignature"><span class="returnType"><a href="UISCVisitor.html" title="type parameter in UISCVisitor">T</a></span>&nbsp;<span class="memberName">visitAddSubExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AddSubExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AddSubExpressionContext</a>&nbsp;ctx)</span></div>
 <div class="block">Visit a parse tree produced by the <code>addSubExpression</code>
+ labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the visitor result</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></h3>
+<div class="memberSignature"><span class="returnType"><a href="UISCVisitor.html" title="type parameter in UISCVisitor">T</a></span>&nbsp;<span class="memberName">visitAndOrXorExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</span></div>
+<div class="block">Visit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

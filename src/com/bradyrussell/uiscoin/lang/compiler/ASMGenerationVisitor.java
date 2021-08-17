@@ -338,6 +338,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     /** End Initialization */
 
 
+
     @Override
     public String visitFunctionCallStatement(UISCParser.FunctionCallStatementContext ctx) {
         if(ctx.expression() instanceof UISCParser.FunctionCallExpressionContext) {
@@ -1034,14 +1035,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return super.visitMultDivExpression(ctx);
     }
 
-    @Override
-    public String visitAndOrExpression(UISCParser.AndOrExpressionContext ctx) {
+    @Override // todo rhs side of optimization doesnt make sense right now...... is that correct? i feel like  literal && function() would result in something incorrect
+    public String visitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx) {
         if (ctx.lhs instanceof UISCParser.BooleanLiteralExpressionContext) { // optimization. could optimize more by checking if the result of visit is false or true
             if (ctx.op.getText().contains("&&")) {
                 return Boolean.parseBoolean(visit(ctx.lhs)) && Boolean.parseBoolean(visit(ctx.rhs)) ? "true" : "false";
             }
             if (ctx.op.getText().contains("||")) {
                 return Boolean.parseBoolean(visit(ctx.lhs)) || Boolean.parseBoolean(visit(ctx.rhs)) ? "true" : "false";
+            }
+            if (ctx.op.getText().contains("^^")) {
+                return Boolean.parseBoolean(visit(ctx.lhs)) ^ Boolean.parseBoolean(visit(ctx.rhs)) ? "true" : "false";
             }
         }
 
@@ -1051,7 +1055,10 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         if (ctx.op.getText().contains("||")) {
             return visit(ctx.lhs) + " " + visit(ctx.rhs) + " " + "or";
         }
-        return super.visitAndOrExpression(ctx);
+        if (ctx.op.getText().contains("^^")) {
+            return visit(ctx.lhs) + " " + visit(ctx.rhs) + " " + "xor";
+        }
+        return super.visitAndOrXorExpression(ctx);
     }
 
     @Override

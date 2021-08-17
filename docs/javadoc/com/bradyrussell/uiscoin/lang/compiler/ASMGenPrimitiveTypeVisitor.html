@@ -179,9 +179,9 @@ extends <a href="ASMGenSubVisitorBase.html" title="class in com.bradyrussell.uis
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code><a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></span>&#8203;(<a href="../generated/UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></span>&#8203;(<a href="../generated/UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
-<div class="block">Visit a parse tree produced by the <code>andOrExpression</code>
+<div class="block">Visit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
@@ -649,19 +649,19 @@ extends <a href="ASMGenSubVisitorBase.html" title="class in com.bradyrussell.uis
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></span>&nbsp;<span class="memberName">visitAndOrExpression</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</span></div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../generated/UISCBaseVisitor.html#visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">UISCBaseVisitor</a></code></span></div>
-<div class="block">Visit a parse tree produced by the <code>andOrExpression</code>
+<h3><a id="visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></span>&nbsp;<span class="memberName">visitAndOrXorExpression</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../generated/UISCBaseVisitor.html#visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">UISCBaseVisitor</a></code></span></div>
+<div class="block">Visit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.
 
  <p>The default implementation returns the result of calling
  <code>AbstractParseTreeVisitor.visitChildren(org.antlr.v4.runtime.tree.RuleNode)</code> on <code>ctx</code>.</p></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../generated/UISCVisitor.html#visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;<a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&gt;</code></dd>
+<dd><code><a href="../generated/UISCVisitor.html#visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;<a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../generated/UISCBaseVisitor.html#visitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">visitAndOrExpression</a></code>&nbsp;in class&nbsp;<code><a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a>&lt;<a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&gt;</code></dd>
+<dd><code><a href="../generated/UISCBaseVisitor.html#visitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">visitAndOrXorExpression</a></code>&nbsp;in class&nbsp;<code><a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a>&lt;<a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ctx</code> - the parse tree</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

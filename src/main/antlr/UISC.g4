@@ -137,7 +137,7 @@ expression:
     |   lhs=expression op=('*'|'/') rhs=expression                          #multDivExpression
     |   lhs=expression op=('+'|'-') rhs=expression                          #addSubExpression
     |   lhs=expression op=('&'|'|'|'^'|'~') rhs=expression                  #bitwiseExpression
-    |   lhs=expression op=('&&'|'||') rhs=expression                        #andOrExpression
+    |   lhs=expression op=('&&'|'||'|'^^') rhs=expression                   #andOrXorExpression
     |   lhs=expression op=('<'|'<='|'>'|'>=') rhs=expression                #comparisonExpression     //  comparison
     |   lhs=expression op=('=='|'!=') rhs=expression                        #equalityExpression     // equality comparison (lowest priority op)
     |   ID                                                                  #variableReferenceExpression     // variable reference

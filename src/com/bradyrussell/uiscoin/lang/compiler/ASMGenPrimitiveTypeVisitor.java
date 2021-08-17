@@ -40,8 +40,6 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
         return PrimitiveType.getWiderType(aggregate, nextResult);
     }
 
-
-
     private PrimitiveType getCastedBinaryExpression(UISCParser.ExpressionContext LHS, UISCParser.ExpressionContext RHS){
         //Type lhsType = LHS.accept(new ASMGenTypeVisitor(Global, CurrentLocalScope));
         //Type rhsType = RHS.accept(new ASMGenTypeVisitor(Global, CurrentLocalScope));
@@ -152,7 +150,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
     }
 
     @Override
-    public PrimitiveType visitAndOrExpression(UISCParser.AndOrExpressionContext ctx) {
+    public PrimitiveType visitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx) {
         return getCastedBinaryExpression(ctx.lhs, ctx.rhs);
     }
 
@@ -168,7 +166,8 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
 
     @Override
     public PrimitiveType visitEqualityExpression(UISCParser.EqualityExpressionContext ctx) {
-        return getCastedBinaryExpression(ctx.lhs, ctx.rhs);
+        return PrimitiveType.Byte; //bool
+        //return getCastedBinaryExpression(ctx.lhs, ctx.rhs);
     }
 
     @Override

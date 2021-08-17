@@ -573,18 +573,6 @@ public interface UISCListener extends ParseTreeListener {
 	 */
 	void exitModuloExpression(UISCParser.ModuloExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code andOrExpression}
-	 * labeled alternative in {@link UISCParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterAndOrExpression(UISCParser.AndOrExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code andOrExpression}
-	 * labeled alternative in {@link UISCParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitAndOrExpression(UISCParser.AndOrExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code multDivExpression}
 	 * labeled alternative in {@link UISCParser#expression}.
 	 * @param ctx the parse tree
@@ -836,6 +824,18 @@ public interface UISCListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAddSubExpression(UISCParser.AddSubExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code andOrXorExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code andOrXorExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code equalityExpression}
 	 * labeled alternative in {@link UISCParser#expression}.

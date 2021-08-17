@@ -139,9 +139,9 @@ extends org.antlr.v4.runtime.tree.ParseTreeListener</pre>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enterAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">enterAndOrExpression</a></span>&#8203;(<a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enterAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">enterAndOrXorExpression</a></span>&#8203;(<a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
-<div class="block">Enter a parse tree produced by the <code>andOrExpression</code>
+<div class="block">Enter a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
@@ -730,9 +730,9 @@ extends org.antlr.v4.runtime.tree.ParseTreeListener</pre>
 </tr>
 <tr class="rowColor" id="i79">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">exitAndOrExpression</a></span>&#8203;(<a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">exitAndOrXorExpression</a></span>&#8203;(<a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
-<div class="block">Exit a parse tree produced by the <code>andOrExpression</code>
+<div class="block">Exit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
@@ -2503,30 +2503,6 @@ extends org.antlr.v4.runtime.tree.ParseTreeListener</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="enterAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">enterAndOrExpression</a></h3>
-<div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">enterAndOrExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Enter a parse tree produced by the <code>andOrExpression</code>
- labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ctx</code> - the parse tree</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="exitAndOrExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrExpressionContext)">exitAndOrExpression</a></h3>
-<div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">exitAndOrExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrExpressionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Exit a parse tree produced by the <code>andOrExpression</code>
- labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ctx</code> - the parse tree</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="enterMultDivExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.MultDivExpressionContext)">enterMultDivExpression</a></h3>
 <div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">enterMultDivExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.MultDivExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.MultDivExpressionContext</a>&nbsp;ctx)</span></div>
 <div class="block">Enter a parse tree produced by the <code>multDivExpression</code>
@@ -3022,6 +2998,30 @@ extends org.antlr.v4.runtime.tree.ParseTreeListener</pre>
 <h3><a id="exitAddSubExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AddSubExpressionContext)">exitAddSubExpression</a></h3>
 <div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">exitAddSubExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AddSubExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AddSubExpressionContext</a>&nbsp;ctx)</span></div>
 <div class="block">Exit a parse tree produced by the <code>addSubExpression</code>
+ labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="enterAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">enterAndOrXorExpression</a></h3>
+<div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">enterAndOrXorExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</span></div>
+<div class="block">Enter a parse tree produced by the <code>andOrXorExpression</code>
+ labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="exitAndOrXorExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AndOrXorExpressionContext)">exitAndOrXorExpression</a></h3>
+<div class="memberSignature"><span class="returnType">void</span>&nbsp;<span class="memberName">exitAndOrXorExpression</span>&#8203;(<span class="arguments"><a href="UISCParser.AndOrXorExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AndOrXorExpressionContext</a>&nbsp;ctx)</span></div>
+<div class="block">Exit a parse tree produced by the <code>andOrXorExpression</code>
  labeled alternative in <a href="UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
