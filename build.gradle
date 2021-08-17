@@ -103,6 +103,7 @@ task copyAntlrGeneratedFiles(type: Copy) {
 	into "src/com/bradyrussell/uiscoin/lang/generated"
 }
 compileJava.dependsOn('copyAntlrGeneratedFiles')
+sourcesJar.dependsOn('copyAntlrGeneratedFiles')
 
 spotless {
 	format 'misc', {
