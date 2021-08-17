@@ -120,7 +120,7 @@ spotless {
 }
 
 task preCommit() {
-	dependsOn("clean", "spotlessApply", "generateGrammarSource", "copyAntlrGeneratedFiles", "test", "javadoc", "copyJavadoc")
+	dependsOn("clean", "generateGrammarSource", "copyAntlrGeneratedFiles", "spotlessApply", "test", "javadoc", "copyJavadoc")
 }
 
 
