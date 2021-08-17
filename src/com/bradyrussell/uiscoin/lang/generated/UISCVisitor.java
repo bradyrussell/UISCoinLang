@@ -1,5 +1,6 @@
 /* (C) Brady Russell 2021 */
-package com.bradyrussell.uiscoin.lang.generated;// Generated from UISC.g4 by ANTLR 4.9.2
+package com.bradyrussell.uiscoin.lang.generated;
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**

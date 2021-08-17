@@ -100,9 +100,9 @@ task copyJavadoc(type: Copy) {
 task copyAntlrGeneratedFiles(type: Copy) {
 	dependsOn("generateGrammarSource")
 	from layout.buildDirectory.dir("generated-src/antlr/main")
-	into "src/main/java/generated"
+	into "src/com/bradyrussell/uiscoin/lang/generated"
 }
-
+compileJava.dependsOn('copyAntlrGeneratedFiles')
 
 spotless {
 	format 'misc', {
@@ -120,8 +120,10 @@ spotless {
 }
 
 task preCommit() {
-	dependsOn("clean", "spotlessApply", "generateGrammarSource", "test", "javadoc", "copyJavadoc")
+	dependsOn("clean", "spotlessApply", "generateGrammarSource", "copyAntlrGeneratedFiles", "test", "javadoc", "copyJavadoc")
 }
+
+
 
 // pre commit:
 //gradle clean spotlessApply test javadoc copyJavadoc

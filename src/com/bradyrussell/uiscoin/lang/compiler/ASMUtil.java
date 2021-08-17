@@ -131,7 +131,7 @@ public class ASMUtil {
     public static String compileHLLToASM(String HLL) {
         ASMUtil.bNoComments = true;
 
-        UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
+        @SuppressWarnings("deprecation") UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
         UISCParser parser = new UISCParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.file();
 
@@ -146,7 +146,7 @@ public class ASMUtil {
 
         if(!HLL.endsWith("\n")) HLL = HLL+"\n";
 
-        UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
+        @SuppressWarnings("deprecation") UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         UISCParser parser = new UISCParser(tokens);
         ParseTree tree = parser.file();

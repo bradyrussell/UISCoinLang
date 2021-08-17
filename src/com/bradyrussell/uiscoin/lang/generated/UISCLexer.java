@@ -1,7 +1,6 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.generated;
 
-// Generated from UISC.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
@@ -116,6 +115,10 @@ public class UISCLexer extends Lexer {
 	public Vocabulary getVocabulary() {
 		return VOCABULARY;
 	}
+
+
+	    //private static final int WHITESPACE = 1;
+	    //private static final int COMMENTS = 2;
 
 
 	public UISCLexer(CharStream input) {
