@@ -109,7 +109,7 @@ public class CompilerTest {
     }
 
     @Test
-    public void Test_StructElementAssign(){
+    public void Test_StructElementAssign(){ //todo negate requires 32 bit? impl byte negate
         String Script =
                 "struct test {\n" +
                         "    int32 a;\n" +
@@ -138,7 +138,6 @@ public class CompilerTest {
                         "myTest.d[9] = -10;\n" +
                         "myTest.d[10] = -11;\n" +
                         "myTest.d[11] = -12;\n";
-
         performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12]");
     }
 

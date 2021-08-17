@@ -117,8 +117,8 @@ public class UISCLexer extends Lexer {
 	}
 
 
-	    //private static final int WHITESPACE = 1;
-	    //private static final int COMMENTS = 2;
+	    private static final int WHITESPACE = 1;
+	    private static final int COMMENTS = 2;
 
 
 	public UISCLexer(CharStream input) {

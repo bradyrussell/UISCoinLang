@@ -3,8 +3,8 @@ grammar UISC;
 package com.bradyrussell.uiscoin.lang.generated;
 }
 @lexer::members {
-    //private static final int WHITESPACE = 1;
-    //private static final int COMMENTS = 2;
+    private static final int WHITESPACE = 1;
+    private static final int COMMENTS = 2;
 }
 
 file:   (functionDeclaration | varDeclaration | statement)+ ;
