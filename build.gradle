@@ -129,4 +129,4 @@ task preCommit() {
 //gradle clean spotlessApply test javadoc copyJavadoc
 
 // post commit (Jenkins):
-//gradle clean spotlessCheck copyAntlrGeneratedFiles test javadoc jar javadocJar sourcesJar copyJar copyJavadoc copyDependencies publish
+//gradle clean copyAntlrGeneratedFiles test javadoc jar javadocJar sourcesJar copyJar copyJavadoc copyDependencies publish
