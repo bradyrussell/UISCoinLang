@@ -52,7 +52,7 @@ java {
 }
 
 dependencies {
-	implementation 'org.jetbrains:annotations:21.0.1'
+	implementation 'org.jetbrains:annotations:22.0.0'
 	// https://mvnrepository.com/artifact/org.antlr/antlr4-runtime
 	implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.9.2'
 	// https://mvnrepository.com/artifact/org.antlr/antlr4

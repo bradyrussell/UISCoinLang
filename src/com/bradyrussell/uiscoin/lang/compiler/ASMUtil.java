@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class ASMUtil {
-    public static boolean bNoComments = false;
+    public static boolean bNoComments = true;
 
     public static String generateComment(String Comment){
         return bNoComments ? "" : "\n/* "+Comment+" */\n";
@@ -129,7 +129,7 @@ public class ASMUtil {
     }
 
     public static String compileHLLToASM(String HLL) {
-        ASMUtil.bNoComments = true;
+        //ASMUtil.bNoComments = true;
 
         @SuppressWarnings("deprecation") UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
         UISCParser parser = new UISCParser(new CommonTokenStream(lexer));

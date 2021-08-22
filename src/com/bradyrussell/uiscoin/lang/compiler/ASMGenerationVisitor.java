@@ -274,7 +274,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                             bShouldWiden = true;
                         } else {
                             System.out.println("Type mismatch! Expected " + primitiveType + " found " + rhsType);
-                            return "TYPE_MISMATCH_EXPECTED_" + primitiveType + "_FOUND_" + rhsType;
+                            return "VARINIT_TYPE_MISMATCH_EXPECTED_" + primitiveType + "_FOUND_" + rhsType;
                         }
                     }
 
@@ -471,7 +471,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                     bShouldWiden = true;
                 } else {
                     System.out.println("Type mismatch! Expected " + structField.PrimitiveType + " found " + rhsType);
-                    return "TYPE_MISMATCH_EXPECTED_" + structField.PrimitiveType + "_FOUND_" + rhsType + "_ERROR";
+                    return "VARASSIGN_TYPE_MISMATCH_EXPECTED_" + structField.PrimitiveType + "_FOUND_" + rhsType + "_ERROR";
                 }
             }
 
@@ -541,7 +541,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 bShouldWiden = true;
             } else {
                 System.out.println("Type mismatch! Expected " + symbol.type + " found " + rhsType);
-                return "TYPE_MISMATCH_EXPECTED_" + symbol.type + "_FOUND_" + rhsType + "_ERROR";
+                return "ASSIGN_ISMATCH_EXPECTED_" + symbol.type + "_FOUND_" + rhsType + "_ERROR";
             }
         }
 
@@ -617,7 +617,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return symbol.generateGetSymbolASM() + " " + visit(ctx.rhs) + " " + opAsm + " "+ symbol.generateSetSymbolASM();
         } else {
             System.out.println("Type mismatch! Expected " + symbol.type + " found " + rhsType);
-            return "TYPE_MISMATCH_EXPECTED_" + symbol.type + "_FOUND_" + rhsType + "_ERROR";
+            return "OPANDASSIGN_TYPE_MISMATCH_EXPECTED_" + symbol.type + "_FOUND_" + rhsType + "_ERROR";
         }
     }
 
@@ -638,7 +638,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return ASMUtil.generateComment("Return statement "+ctx.getText()) + " "+visit(ctx.retval)+ASMUtil.generateCastAssembly(returnedType,definedReturnType);
             } else {
                 System.out.println("Type mismatch! Expected " + definedReturnType + " found " + returnedType);
-                return "TYPE_MISMATCH_EXPECTED_" + definedReturnType + "_FOUND_" + returnedType + "_ERROR";
+                return "RETURN_TYPE_MISMATCH_EXPECTED_" + definedReturnType + "_FOUND_" + returnedType + "_ERROR";
             }
         }
     }
@@ -1035,9 +1035,9 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return super.visitMultDivExpression(ctx);
     }
 
-    @Override // todo rhs side of optimization doesnt make sense right now...... is that correct? i feel like  literal && function() would result in something incorrect
+    @Override
     public String visitAndOrXorExpression(UISCParser.AndOrXorExpressionContext ctx) {
-        if (ctx.lhs instanceof UISCParser.BooleanLiteralExpressionContext) { // optimization. could optimize more by checking if the result of visit is false or true
+        if (ctx.lhs instanceof UISCParser.BooleanLiteralExpressionContext && ctx.rhs instanceof UISCParser.BooleanLiteralExpressionContext) { // optimization. could optimize more by checking if the result of visit is false or true
             if (ctx.op.getText().contains("&&")) {
                 return Boolean.parseBoolean(visit(ctx.lhs)) && Boolean.parseBoolean(visit(ctx.rhs)) ? "true" : "false";
             }
@@ -1119,6 +1119,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 if (providedType.widensTo(functionSymbol.Symbol.getTypeOfParameter(i))) {
                     sb.append(ASMUtil.generateComment("Function parameter " + functionSymbol.Symbol.getNameOfParameter(i)));
                     sb.append(visit(expression.get(i))).append(" ").append(ASMUtil.generateCastAssembly(providedType, functionSymbol.Symbol.getTypeOfParameter(i)));
+                    // todo generate store address is giving addresses already occupied
                     sb.append(ASMUtil.generateStoreAddress(((Symbol) functionSymbol.getSymbol(functionSymbol.Symbol.getNameOfParameter(i))).getSymbolAddress()));
                 } else {
                     System.out.println("Function " + ctx.ID().getText() + " expects " + functionSymbol.Symbol.getTypeOfParameter(i) + " for parameter " + functionSymbol.Symbol.getNameOfParameter(i) + " but " + providedType + " was provided.");
@@ -1128,8 +1129,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
 
         return sb.toString()+ ASMUtil.generateComment("Function call "+ctx.getText()) + // params
-                " depth "+//capture whole stack
-                //" push ["+ctx.exprList().expression().size()+"] "+ // number of parameters
+                " depth "+//capture whole stack so we can reference globals. OR do we want to make functions unable to modify global state, only return
+               // " push ["+ctx.exprList().expression().size()+"] "+ // number of parameters
                 functionSymbol.generateGetSymbolASM()+
                 //" push [" + functionSymbol.Symbol.address + "] pick"+ // get function bytecode
                 "call verify"; // execute and ensure it did not fail
