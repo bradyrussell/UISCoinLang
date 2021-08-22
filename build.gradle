@@ -71,7 +71,7 @@ generateGrammarSource {
 
 jar {
 	manifest {
-		attributes  'Automatic-Module-Name': 'com.bradyrussell.uiscoin'
+		attributes  'Automatic-Module-Name': 'com.bradyrussell.uiscoin.lang'
 	}
 }
 
