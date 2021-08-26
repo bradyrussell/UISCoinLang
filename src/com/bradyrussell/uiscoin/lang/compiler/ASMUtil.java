@@ -138,7 +138,8 @@ public class ASMUtil {
         ASMGenerationVisitor asmGenerationVisitor = new ASMGenerationVisitor();
         String asm = asmGenerationVisitor.visit(tree);
 
-        return asmGenerationVisitor.Global.getRecursiveAllocation()+ "\n" + asm;
+        String mainFunctionAsm = asmGenerationVisitor.getMainFunctionAsm();
+        return asmGenerationVisitor.Global.getRecursiveAllocation()+ "\n" + asm + " " + (mainFunctionAsm == null ? "" : mainFunctionAsm);
     }
 
     public static String compileHLLToSyntaxMarkup(String HLL) {

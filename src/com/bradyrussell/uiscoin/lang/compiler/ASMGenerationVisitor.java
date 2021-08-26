@@ -4,6 +4,7 @@ package com.bradyrussell.uiscoin.lang.compiler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.bradyrussell.uiscoin.lang.compiler.scope.*;
 import com.bradyrussell.uiscoin.lang.compiler.symbol.*;
@@ -17,6 +18,12 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     HashMap<String, Integer> nativeFunctionCallParameters = new HashMap<>();
 
     ////////////////////////
+
+    private String mainFunctionAsm = null;
+
+    public String getMainFunctionAsm() {
+        return mainFunctionAsm;
+    }
 
     int LabelIndex = 0;
 
@@ -623,6 +630,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitReturnStatement(UISCParser.ReturnStatementContext ctx) {
+        if(ctx.retval == null) return " nop";
         PrimitiveType returnedType = ctx.retval.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
         RuleContext parent = ctx.parent;
@@ -1130,10 +1138,13 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         return sb.toString()+ ASMUtil.generateComment("Function call "+ctx.getText()) + // params
                 " depth "+//capture whole stack so we can reference globals. OR do we want to make functions unable to modify global state, only return
+                // if we give the whole stack to functions, then parameters can just refer to their original position if they are var refs.
+                // functions dont need to modify global state if we move to a main method
                // " push ["+ctx.exprList().expression().size()+"] "+ // number of parameters
                 functionSymbol.generateGetSymbolASM()+
                 //" push [" + functionSymbol.Symbol.address + "] pick"+ // get function bytecode
-                "call verify"; // execute and ensure it did not fail
+                "call verify ";// +// execute and ensure it did not fail
+           //     "push ["+ctx.exprList().expression().size()+"] dropn "; // drop function parameters
     }
 
     @Override
@@ -1393,6 +1404,11 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "NO_BLOCK_SPECIFIED_IN_FUNCTION";
         }
 
+        if(ctx.ID().getText().equalsIgnoreCase("main")) {
+            mainFunctionAsm = ASMUtil.generateComment("Main function declaration") + visit(ctx.block());
+            return "";
+        }
+
         if(!fxnType.equals(PrimitiveType.Void)) {
             Boolean doAllPathsReturn = ctx.block().accept(new ASMGenAllPathsReturnVisitor());
             if(doAllPathsReturn == null || !doAllPathsReturn){
@@ -1422,8 +1438,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         int FunctionAddress = ((ScopeWithSymbol) getCurrentScope().findScopeContaining(ctx.ID().getText()).getSymbol(ctx.ID().getText())).Symbol.address;
 
         PopLocalScope();
+
         return ASMUtil.generateComment("Function declaration "+ctx.ID().getText()) + "push { " + functionCode + "} "+ ASMUtil.generateStoreAddress(FunctionAddress);//push [" + FunctionAddress + "] put";
     }
-
-
 }

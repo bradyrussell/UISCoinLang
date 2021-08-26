@@ -40,7 +40,7 @@ arrayInitializer
     ;
 
 functionDeclaration
-    :   type ID '(' formalParameters? ')' block // "void f(int x) {...}"
+    :   type ID array='[]'? '(' formalParameters? ')' block // "void f(int x) {...}"
     ;
 formalParameters
     :   formalParameter (',' formalParameter)*

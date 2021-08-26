@@ -33,6 +33,10 @@ public enum PrimitiveType {
     }
 
     public static PrimitiveType getByKeyword(String Keyword) {
+        if(Keyword.endsWith("@")) {
+            return getByKeyword(Keyword.substring(0,Keyword.length()-1)).toPointer();
+        }
+
         for (PrimitiveType value : PrimitiveType.values()) {
             for (String keyword : value.Keywords) {
                 if(keyword.equals(Keyword)) return value;
@@ -79,7 +83,7 @@ public enum PrimitiveType {
 
     public boolean widensTo(PrimitiveType WideType){
         if(this.equals(PrimitiveType.Void)) return true;
-        if(WideType.isPointer() || WideType.isArray()) return false;
+        if(WideType.isPointer() || WideType.isArray()) return this.equals(WideType);
         if(!(this.equals(PrimitiveType.Byte) || this.equals(PrimitiveType.Int32))) return false;
         return this.SizeOf <= WideType.SizeOf;
     }

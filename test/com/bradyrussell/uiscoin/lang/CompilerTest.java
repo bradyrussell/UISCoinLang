@@ -27,6 +27,35 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_Main() {
+        String Script =
+                "void main[](void in[]) {\n" +
+                        "\treturn ;\n" +
+                        "}";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
+    public void Test_PointerArray() {
+        String Script =
+                "void@ x[] = {(void@)1, (void@)2, (void@)3, (void@)4};";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
+    public void Test_FunctionReturnsPointer() {
+        String Script =
+                "int32@ x(int32 a) {\n" +
+                        "\treturn $a;\n" +
+                        "}\n" +
+                        "int32@ y = x(1);";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_BooleanLogic() {
         String Script =
                         "byte t = 1;\n" +
