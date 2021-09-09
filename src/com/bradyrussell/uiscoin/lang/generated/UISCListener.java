@@ -117,6 +117,16 @@ public interface UISCListener extends ParseTreeListener {
 	 */
 	void exitStructType(UISCParser.StructTypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UISCParser#inferredType}.
+	 * @param ctx the parse tree
+	 */
+	void enterInferredType(UISCParser.InferredTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UISCParser#inferredType}.
+	 * @param ctx the parse tree
+	 */
+	void exitInferredType(UISCParser.InferredTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UISCParser#booleanLiteral}.
 	 * @param ctx the parse tree
 	 */

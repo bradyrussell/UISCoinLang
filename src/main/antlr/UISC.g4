@@ -23,7 +23,7 @@ structDeclaration
     :   'struct' ID '{' varDeclaration+ '}'
     ;
 
-type:   (primitiveType | structType) pointer?;
+type:   (primitiveType | structType | inferredType) pointer?;
 
 primitiveType:
     'void' | 'byte' | 'int32' | 'int64' | 'float'
@@ -31,6 +31,10 @@ primitiveType:
 
 structType:
     ID
+    ;
+
+inferredType:
+    'var' | 'auto'
     ;
 
 booleanLiteral: trueliteral='true' | falseliteral='false' | nullliteral='null';

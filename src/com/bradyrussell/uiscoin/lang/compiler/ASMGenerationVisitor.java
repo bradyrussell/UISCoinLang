@@ -256,9 +256,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     @Override
     public String visitVarInitialization(UISCParser.VarInitializationContext ctx) {
 
-        if(ctx.type().primitiveType() != null){
-            PrimitiveType primitiveType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
+        PrimitiveType primitiveType = null;
 
+        if(ctx.type().inferredType() != null) {
+            primitiveType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+        }
+
+        if(ctx.type().primitiveType() != null){
+            primitiveType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
+        }
+
+        if(primitiveType != null){
             if(ctx.constant == null) {
                 int address = getCurrentScope().declareSymbol(ctx.ID().getText(), primitiveType);
 

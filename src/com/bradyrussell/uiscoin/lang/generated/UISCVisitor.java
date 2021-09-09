@@ -76,6 +76,12 @@ public interface UISCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStructType(UISCParser.StructTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UISCParser#inferredType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInferredType(UISCParser.InferredTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UISCParser#booleanLiteral}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

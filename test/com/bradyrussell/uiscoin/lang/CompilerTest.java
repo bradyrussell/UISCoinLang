@@ -56,6 +56,17 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_TypeInference() {
+        String Script =
+                        "auto x = 32;\n" +
+                        "auto y = 256;\n" +
+                        "auto z = x + y;\n"+
+                        "assert(z == 288);";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_BooleanLogic() {
         String Script =
                         "byte t = 1;\n" +

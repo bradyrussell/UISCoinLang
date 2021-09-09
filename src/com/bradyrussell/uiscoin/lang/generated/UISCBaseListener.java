@@ -137,6 +137,18 @@ public class UISCBaseListener implements UISCListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInferredType(UISCParser.InferredTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInferredType(UISCParser.InferredTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBooleanLiteral(UISCParser.BooleanLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
