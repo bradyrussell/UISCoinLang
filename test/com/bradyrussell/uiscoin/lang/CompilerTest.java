@@ -47,12 +47,16 @@ public class CompilerTest {
     }
 
     @Test
-    public void Test_IncludeBinary() {
+    public void Test_IncludeBinary() throws IOException {
+        String script = "int32 x = 123;";
+        Files.write(Path.of("test/com/bradyrussell/uiscoin/lang/include", "demo.uiscb"), ScriptParser.CompileScriptTokensToBytecode(ScriptParser.GetTokensFromString(ASMUtil.compileHLLToASM(script), true)));
+
         String Script =
                         "include(\"demo.uiscb\");\n";
 
         ASMUtil.defaultFileSystem = new StandardCompilerFileSystem("test/com/bradyrussell/uiscoin/lang/include");
         performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 123]");
+        Files.delete(Path.of("test/com/bradyrussell/uiscoin/lang/include", "demo.uiscb"));
     }
 
     @Test

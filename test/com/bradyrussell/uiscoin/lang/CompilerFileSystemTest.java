@@ -19,10 +19,4 @@ public class CompilerFileSystemTest {
         CompilerFileSystem cfs = new StandardCompilerFileSystem("test/com/bradyrussell/uiscoin/lang");
         cfs.listDirectory("").forEach(System.out::println);
     }
-
-    @Test
-    public void Test_DemoBinary() throws IOException {
-        String script = "int32 x = 123;";
-        Files.write(Path.of("test/com/bradyrussell/uiscoin/lang/include", "demo.uiscb"), ScriptParser.CompileScriptTokensToBytecode(ScriptParser.GetTokensFromString(ASMUtil.compileHLLToASM(script), true)));
-    }
 }
