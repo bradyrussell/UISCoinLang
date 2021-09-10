@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -153,7 +153,7 @@ extends <a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrus
 </thead>
 <tbody>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">ASMGenerationVisitor</a></span>()</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">ASMGenerationVisitor</a></span>&#8203;(<a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;fileSystem)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -333,27 +333,43 @@ java.lang.String&nbsp;nextResult)</code></th>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement</a></span>&#8203;(<a href="../generated/UISCParser.FlagDataStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FlagDataStatementContext</a>&nbsp;ctx)</code></th>
+<td class="colLast">
+<div class="block">Visit a parse tree produced by the <code>flagDataStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor" id="i22">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement</a></span>&#8203;(<a href="../generated/UISCParser.FlagStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FlagStatementContext</a>&nbsp;ctx)</code></th>
+<td class="colLast">
+<div class="block">Visit a parse tree produced by the <code>flagStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i23">
+<td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitFunctionCallExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.FunctionCallExpressionContext)">visitFunctionCallExpression</a></span>&#8203;(<a href="../generated/UISCParser.FunctionCallExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FunctionCallExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
 <div class="block">Visit a parse tree produced by the <code>functionCallExpression</code>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i22">
+<tr class="altColor" id="i24">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitFunctionCallStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FunctionCallStatementContext)">visitFunctionCallStatement</a></span>&#8203;(<a href="../generated/UISCParser.FunctionCallStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FunctionCallStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
 <div class="block">End Initialization</div>
 </td>
 </tr>
-<tr class="rowColor" id="i23">
+<tr class="rowColor" id="i25">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitFunctionDeclaration(com.bradyrussell.uiscoin.lang.generated.UISCParser.FunctionDeclarationContext)">visitFunctionDeclaration</a></span>&#8203;(<a href="../generated/UISCParser.FunctionDeclarationContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FunctionDeclarationContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
 <div class="block">Visit a parse tree produced by <a href="../generated/UISCParser.html#functionDeclaration()"><code>UISCParser.functionDeclaration()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i24">
+<tr class="altColor" id="i26">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitIfStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IfStatementContext)">visitIfStatement</a></span>&#8203;(<a href="../generated/UISCParser.IfStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.IfStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -361,7 +377,14 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i25">
+<tr class="rowColor" id="i27">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement</a></span>&#8203;(<a href="../generated/UISCParser.IncludeStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.IncludeStatementContext</a>&nbsp;ctx)</code></th>
+<td class="colLast">
+<div class="block">Begin Statements</div>
+</td>
+</tr>
+<tr class="altColor" id="i28">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitLengthOfExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.LengthOfExpressionContext)">visitLengthOfExpression</a></span>&#8203;(<a href="../generated/UISCParser.LengthOfExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.LengthOfExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -369,7 +392,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i26">
+<tr class="rowColor" id="i29">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitModuloExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.ModuloExpressionContext)">visitModuloExpression</a></span>&#8203;(<a href="../generated/UISCParser.ModuloExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ModuloExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -377,7 +400,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i27">
+<tr class="altColor" id="i30">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitMultDivExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.MultDivExpressionContext)">visitMultDivExpression</a></span>&#8203;(<a href="../generated/UISCParser.MultDivExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.MultDivExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -385,7 +408,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i28">
+<tr class="rowColor" id="i31">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitNativeCallExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.NativeCallExpressionContext)">visitNativeCallExpression</a></span>&#8203;(<a href="../generated/UISCParser.NativeCallExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.NativeCallExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -393,7 +416,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i29">
+<tr class="altColor" id="i32">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitNegateExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.NegateExpressionContext)">visitNegateExpression</a></span>&#8203;(<a href="../generated/UISCParser.NegateExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.NegateExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -401,7 +424,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i30">
+<tr class="rowColor" id="i33">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitNotExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.NotExpressionContext)">visitNotExpression</a></span>&#8203;(<a href="../generated/UISCParser.NotExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.NotExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -409,14 +432,14 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i31">
+<tr class="altColor" id="i34">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitNumberLiteralExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.NumberLiteralExpressionContext)">visitNumberLiteralExpression</a></span>&#8203;(<a href="../generated/UISCParser.NumberLiteralExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.NumberLiteralExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
 <div class="block">Begin Literals</div>
 </td>
 </tr>
-<tr class="altColor" id="i32">
+<tr class="rowColor" id="i35">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitOpAndAssignmentStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.OpAndAssignmentStatementContext)">visitOpAndAssignmentStatement</a></span>&#8203;(<a href="../generated/UISCParser.OpAndAssignmentStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.OpAndAssignmentStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -424,7 +447,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i33">
+<tr class="altColor" id="i36">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitPostfixOpExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.PostfixOpExpressionContext)">visitPostfixOpExpression</a></span>&#8203;(<a href="../generated/UISCParser.PostfixOpExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.PostfixOpExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -432,7 +455,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i34">
+<tr class="rowColor" id="i37">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitPrefixOpExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.PrefixOpExpressionContext)">visitPrefixOpExpression</a></span>&#8203;(<a href="../generated/UISCParser.PrefixOpExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.PrefixOpExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -440,7 +463,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i35">
+<tr class="altColor" id="i38">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitReturnStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ReturnStatementContext)">visitReturnStatement</a></span>&#8203;(<a href="../generated/UISCParser.ReturnStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ReturnStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -448,7 +471,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i36">
+<tr class="rowColor" id="i39">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitSizeOfExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.SizeOfExpressionContext)">visitSizeOfExpression</a></span>&#8203;(<a href="../generated/UISCParser.SizeOfExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.SizeOfExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -456,7 +479,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i37">
+<tr class="altColor" id="i40">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitStringLiteralExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.StringLiteralExpressionContext)">visitStringLiteralExpression</a></span>&#8203;(<a href="../generated/UISCParser.StringLiteralExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.StringLiteralExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -464,14 +487,14 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i38">
+<tr class="rowColor" id="i41">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitStructDeclaration(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructDeclarationContext)">visitStructDeclaration</a></span>&#8203;(<a href="../generated/UISCParser.StructDeclarationContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.StructDeclarationContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
 <div class="block">Visit a parse tree produced by <a href="../generated/UISCParser.html#structDeclaration()"><code>UISCParser.structDeclaration()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i39">
+<tr class="altColor" id="i42">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitStructFieldReferenceExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructFieldReferenceExpressionContext)">visitStructFieldReferenceExpression</a></span>&#8203;(<a href="../generated/UISCParser.StructFieldReferenceExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.StructFieldReferenceExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -479,7 +502,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i40">
+<tr class="rowColor" id="i43">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitTernaryExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.TernaryExpressionContext)">visitTernaryExpression</a></span>&#8203;(<a href="../generated/UISCParser.TernaryExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.TernaryExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -487,14 +510,15 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i41">
+<tr class="altColor" id="i44">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">visitTryCatchStatement</a></span>&#8203;(<a href="../generated/UISCParser.TryCatchStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.TryCatchStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
-<div class="block">Begin Statements</div>
+<div class="block">Visit a parse tree produced by the <code>tryCatchStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i42">
+<tr class="rowColor" id="i45">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitUforeachStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.UforeachStatementContext)">visitUforeachStatement</a></span>&#8203;(<a href="../generated/UISCParser.UforeachStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.UforeachStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -502,7 +526,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i43">
+<tr class="altColor" id="i46">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitUforiStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.UforiStatementContext)">visitUforiStatement</a></span>&#8203;(<a href="../generated/UISCParser.UforiStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.UforiStatementContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -510,7 +534,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i44">
+<tr class="rowColor" id="i47">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitValueAtVariableExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.ValueAtVariableExpressionContext)">visitValueAtVariableExpression</a></span>&#8203;(<a href="../generated/UISCParser.ValueAtVariableExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ValueAtVariableExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -518,7 +542,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i45">
+<tr class="altColor" id="i48">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitVariableReferenceExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.VariableReferenceExpressionContext)">visitVariableReferenceExpression</a></span>&#8203;(<a href="../generated/UISCParser.VariableReferenceExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.VariableReferenceExpressionContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -526,7 +550,7 @@ java.lang.String&nbsp;nextResult)</code></th>
  labeled alternative in <a href="../generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i46">
+<tr class="rowColor" id="i49">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#visitVarInitialization(com.bradyrussell.uiscoin.lang.generated.UISCParser.VarInitializationContext)">visitVarInitialization</a></span>&#8203;(<a href="../generated/UISCParser.VarInitializationContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.VarInitializationContext</a>&nbsp;ctx)</code></th>
 <td class="colLast">
@@ -542,7 +566,7 @@ java.lang.String&nbsp;nextResult)</code></th>
 <h3>Methods inherited from class&nbsp;com.bradyrussell.uiscoin.lang.generated.<a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a></h3>
 <a id="methods.inherited.from.class.com.bradyrussell.uiscoin.lang.generated.UISCBaseVisitor">
 <!--   -->
-</a><code><a href="../generated/UISCBaseVisitor.html#visitAssemblyStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.AssemblyStatementContext)">visitAssemblyStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitAssertionStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.AssertionStatementContext)">visitAssertionStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitBlock(com.bradyrussell.uiscoin.lang.generated.UISCParser.BlockContext)">visitBlock</a>, <a href="../generated/UISCBaseVisitor.html#visitBlockStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.BlockStatementContext)">visitBlockStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitBooleanLiteralExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.BooleanLiteralExpressionContext)">visitBooleanLiteralExpression</a>, <a href="../generated/UISCBaseVisitor.html#visitBreakStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.BreakStatementContext)">visitBreakStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.CatchStatementContext)">visitCatchStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitContinueStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ContinueStatementContext)">visitContinueStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitElseifStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ElseifStatementContext)">visitElseifStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitElseStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ElseStatementContext)">visitElseStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitExceptionStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ExceptionStatementContext)">visitExceptionStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitExprList(com.bradyrussell.uiscoin.lang.generated.UISCParser.ExprListContext)">visitExprList</a>, <a href="../generated/UISCBaseVisitor.html#visitFile(com.bradyrussell.uiscoin.lang.generated.UISCParser.FileContext)">visitFile</a>, <a href="../generated/UISCBaseVisitor.html#visitFlag(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagContext)">visitFlag</a>, <a href="../generated/UISCBaseVisitor.html#visitFlagData(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataContext)">visitFlagData</a>, <a href="../generated/UISCBaseVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitFormalParameter(com.bradyrussell.uiscoin.lang.generated.UISCParser.FormalParameterContext)">visitFormalParameter</a>, <a href="../generated/UISCBaseVisitor.html#visitFormalParameters(com.bradyrussell.uiscoin.lang.generated.UISCParser.FormalParametersContext)">visitFormalParameters</a>, <a href="../generated/UISCBaseVisitor.html#visitForStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ForStatementContext)">visitForStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitInclude(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeContext)">visitInclude</a>, <a href="../generated/UISCBaseVisitor.html#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitInferredType(com.bradyrussell.uiscoin.lang.generated.UISCParser.InferredTypeContext)">visitInferredType</a>, <a href="../generated/UISCBaseVisitor.html#visitNumber(com.bradyrussell.uiscoin.lang.generated.UISCParser.NumberContext)">visitNumber</a>, <a href="../generated/UISCBaseVisitor.html#visitParenExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.ParenExpressionContext)">visitParenExpression</a>, <a href="../generated/UISCBaseVisitor.html#visitPointer(com.bradyrussell.uiscoin.lang.generated.UISCParser.PointerContext)">visitPointer</a>, <a href="../generated/UISCBaseVisitor.html#visitPrimitiveType(com.bradyrussell.uiscoin.lang.generated.UISCParser.PrimitiveTypeContext)">visitPrimitiveType</a>, <a href="../generated/UISCBaseVisitor.html#visitStructDeclarationStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructDeclarationStatementContext)">visitStructDeclarationStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitStructField(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructFieldContext)">visitStructField</a>, <a href="../generated/UISCBaseVisitor.html#visitStructType(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructTypeContext)">visitStructType</a>, <a href="../generated/UISCBaseVisitor.html#visitTryStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryStatementContext)">visitTryStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitType(com.bradyrussell.uiscoin.lang.generated.UISCParser.TypeContext)">visitType</a>, <a href="../generated/UISCBaseVisitor.html#visitVarDeclarationStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.VarDeclarationStatementContext)">visitVarDeclarationStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitWhileStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.WhileStatementContext)">visitWhileStatement</a></code></div>
+</a><code><a href="../generated/UISCBaseVisitor.html#visitAssemblyStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.AssemblyStatementContext)">visitAssemblyStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitAssertionStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.AssertionStatementContext)">visitAssertionStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitBlock(com.bradyrussell.uiscoin.lang.generated.UISCParser.BlockContext)">visitBlock</a>, <a href="../generated/UISCBaseVisitor.html#visitBlockStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.BlockStatementContext)">visitBlockStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitBooleanLiteralExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.BooleanLiteralExpressionContext)">visitBooleanLiteralExpression</a>, <a href="../generated/UISCBaseVisitor.html#visitBreakStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.BreakStatementContext)">visitBreakStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.CatchStatementContext)">visitCatchStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitContinueStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ContinueStatementContext)">visitContinueStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitElseifStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ElseifStatementContext)">visitElseifStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitElseStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ElseStatementContext)">visitElseStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitExceptionStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ExceptionStatementContext)">visitExceptionStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitExprList(com.bradyrussell.uiscoin.lang.generated.UISCParser.ExprListContext)">visitExprList</a>, <a href="../generated/UISCBaseVisitor.html#visitFile(com.bradyrussell.uiscoin.lang.generated.UISCParser.FileContext)">visitFile</a>, <a href="../generated/UISCBaseVisitor.html#visitFlag(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagContext)">visitFlag</a>, <a href="../generated/UISCBaseVisitor.html#visitFlagData(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataContext)">visitFlagData</a>, <a href="../generated/UISCBaseVisitor.html#visitFormalParameter(com.bradyrussell.uiscoin.lang.generated.UISCParser.FormalParameterContext)">visitFormalParameter</a>, <a href="../generated/UISCBaseVisitor.html#visitFormalParameters(com.bradyrussell.uiscoin.lang.generated.UISCParser.FormalParametersContext)">visitFormalParameters</a>, <a href="../generated/UISCBaseVisitor.html#visitForStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.ForStatementContext)">visitForStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitInclude(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeContext)">visitInclude</a>, <a href="../generated/UISCBaseVisitor.html#visitInferredType(com.bradyrussell.uiscoin.lang.generated.UISCParser.InferredTypeContext)">visitInferredType</a>, <a href="../generated/UISCBaseVisitor.html#visitNumber(com.bradyrussell.uiscoin.lang.generated.UISCParser.NumberContext)">visitNumber</a>, <a href="../generated/UISCBaseVisitor.html#visitParenExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.ParenExpressionContext)">visitParenExpression</a>, <a href="../generated/UISCBaseVisitor.html#visitPointer(com.bradyrussell.uiscoin.lang.generated.UISCParser.PointerContext)">visitPointer</a>, <a href="../generated/UISCBaseVisitor.html#visitPrimitiveType(com.bradyrussell.uiscoin.lang.generated.UISCParser.PrimitiveTypeContext)">visitPrimitiveType</a>, <a href="../generated/UISCBaseVisitor.html#visitStructDeclarationStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructDeclarationStatementContext)">visitStructDeclarationStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitStructField(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructFieldContext)">visitStructField</a>, <a href="../generated/UISCBaseVisitor.html#visitStructType(com.bradyrussell.uiscoin.lang.generated.UISCParser.StructTypeContext)">visitStructType</a>, <a href="../generated/UISCBaseVisitor.html#visitTryStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryStatementContext)">visitTryStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitType(com.bradyrussell.uiscoin.lang.generated.UISCParser.TypeContext)">visitType</a>, <a href="../generated/UISCBaseVisitor.html#visitVarDeclarationStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.VarDeclarationStatementContext)">visitVarDeclarationStatement</a>, <a href="../generated/UISCBaseVisitor.html#visitWhileStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.WhileStatementContext)">visitWhileStatement</a></code></div>
 <div class="inheritedList">
 <h3>Methods inherited from class&nbsp;org.antlr.v4.runtime.tree.AbstractParseTreeVisitor</h3>
 <a id="methods.inherited.from.class.org.antlr.v4.runtime.tree.AbstractParseTreeVisitor">
@@ -595,8 +619,8 @@ java.lang.String&nbsp;nextResult)</code></th>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="&lt;init&gt;()">ASMGenerationVisitor</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">ASMGenerationVisitor</span>()</div>
+<h3><a id="&lt;init&gt;(com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">ASMGenerationVisitor</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">ASMGenerationVisitor</span>&#8203;(<span class="arguments"><a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;fileSystem)</span></div>
 </section>
 </li>
 </ul>
@@ -798,9 +822,75 @@ java.lang.String&nbsp;nextResult)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">visitIncludeStatement</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.IncludeStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.IncludeStatementContext</a>&nbsp;ctx)</span></div>
+<div class="block">Begin Statements</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../generated/UISCVisitor.html#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../generated/UISCBaseVisitor.html#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement</a></code>&nbsp;in class&nbsp;<code><a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the visitor result</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">visitFlagStatement</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.FlagStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FlagStatementContext</a>&nbsp;ctx)</span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../generated/UISCBaseVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">UISCBaseVisitor</a></code></span></div>
+<div class="block">Visit a parse tree produced by the <code>flagStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.
+
+ <p>The default implementation returns the result of calling
+ <code>AbstractParseTreeVisitor.visitChildren(org.antlr.v4.runtime.tree.RuleNode)</code> on <code>ctx</code>.</p></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../generated/UISCVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../generated/UISCBaseVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement</a></code>&nbsp;in class&nbsp;<code><a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the visitor result</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">visitFlagDataStatement</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.FlagDataStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FlagDataStatementContext</a>&nbsp;ctx)</span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../generated/UISCBaseVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">UISCBaseVisitor</a></code></span></div>
+<div class="block">Visit a parse tree produced by the <code>flagDataStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.
+
+ <p>The default implementation returns the result of calling
+ <code>AbstractParseTreeVisitor.visitChildren(org.antlr.v4.runtime.tree.RuleNode)</code> on <code>ctx</code>.</p></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../generated/UISCVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../generated/UISCBaseVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement</a></code>&nbsp;in class&nbsp;<code><a href="../generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a>&lt;java.lang.String&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - the parse tree</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the visitor result</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">visitTryCatchStatement</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">visitTryCatchStatement</span>&#8203;(<span class="arguments"><a href="../generated/UISCParser.TryCatchStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.TryCatchStatementContext</a>&nbsp;ctx)</span></div>
-<div class="block">Begin Statements</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../generated/UISCBaseVisitor.html#visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">UISCBaseVisitor</a></code></span></div>
+<div class="block">Visit a parse tree produced by the <code>tryCatchStatement</code>
+ labeled alternative in <a href="../generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.
+
+ <p>The default implementation returns the result of calling
+ <code>AbstractParseTreeVisitor.visitChildren(org.antlr.v4.runtime.tree.RuleNode)</code> on <code>ctx</code>.</p></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../generated/UISCVisitor.html#visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">visitTryCatchStatement</a></code>&nbsp;in interface&nbsp;<code><a href="../generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a>&lt;java.lang.String&gt;</code></dd>

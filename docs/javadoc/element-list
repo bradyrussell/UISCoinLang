@@ -1,5 +1,6 @@
 com.bradyrussell.uiscoin.lang.compiler
 com.bradyrussell.uiscoin.lang.compiler.exception
+com.bradyrussell.uiscoin.lang.compiler.filesystem
 com.bradyrussell.uiscoin.lang.compiler.scope
 com.bradyrussell.uiscoin.lang.compiler.symbol
 com.bradyrussell.uiscoin.lang.compiler.type

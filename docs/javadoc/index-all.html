@@ -277,7 +277,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler"><span class="typeNameLink">ASMGenerationVisitor</span></a> - Class in <a href="com/bradyrussell/uiscoin/lang/compiler/package-summary.html">com.bradyrussell.uiscoin.lang.compiler</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#%3Cinit%3E()">ASMGenerationVisitor()</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#%3Cinit%3E(com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">ASMGenerationVisitor(CompilerFileSystem)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenPrimitiveTypeVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler"><span class="typeNameLink">ASMGenPrimitiveTypeVisitor</span></a> - Class in <a href="com/bradyrussell/uiscoin/lang/compiler/package-summary.html">com.bradyrussell.uiscoin.lang.compiler</a></dt>
 <dd>&nbsp;</dd>
@@ -381,6 +381,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/exception/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.exception</a> - package com.bradyrussell.uiscoin.lang.compiler.exception</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.filesystem</a> - package com.bradyrussell.uiscoin.lang.compiler.filesystem</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/scope/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.scope</a> - package com.bradyrussell.uiscoin.lang.compiler.scope</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/symbol/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.symbol</a> - package com.bradyrussell.uiscoin.lang.compiler.symbol</dt>
@@ -397,11 +399,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#compileHLLToASM(java.lang.String)">compileHLLToASM(String)</a></span> - Static method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#compileHLLToASM(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">compileHLLToASM(String, CompilerFileSystem)</a></span> - Static method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#compileHLLToSyntaxMarkup(java.lang.String)">compileHLLToSyntaxMarkup(String)</a></span> - Static method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/bradyrussell/uiscoin/lang/compiler/exception/CompilerErrorException.html" title="class in com.bradyrussell.uiscoin.lang.compiler.exception"><span class="typeNameLink">CompilerErrorException</span></a> - Exception in <a href="com/bradyrussell/uiscoin/lang/compiler/exception/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.exception</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/exception/CompilerErrorException.html#%3Cinit%3E(java.lang.String)">CompilerErrorException(String)</a></span> - Constructor for exception com.bradyrussell.uiscoin.lang.compiler.exception.<a href="com/bradyrussell/uiscoin/lang/compiler/exception/CompilerErrorException.html" title="class in com.bradyrussell.uiscoin.lang.compiler.exception">CompilerErrorException</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem"><span class="typeNameLink">CompilerFileSystem</span></a> - Interface in <a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.filesystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.TernaryExpressionContext.html#condition">condition</a></span> - Variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.TernaryExpressionContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.TernaryExpressionContext</a></dt>
 <dd>&nbsp;</dd>
@@ -450,6 +456,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeBase.html#declareSymbol(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">declareSymbol(String, PrimitiveType)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.scope.<a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeBase.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeBase</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html#deduceTypeOfNumber(java.lang.String)">deduceTypeOfNumber(String)</a></span> - Static method in enum com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#defaultFileSystem">defaultFileSystem</a></span> - Static variable in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenAllPathsReturnVisitor.html#defaultResult()">defaultResult()</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenAllPathsReturnVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenAllPathsReturnVisitor</a></dt>
 <dd>&nbsp;</dd>
@@ -913,6 +921,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Enter a parse tree produced by <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#include()"><code>UISCParser.include()</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlightGenerator.html#enterInclude(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeContext)">enterInclude(UISCParser.IncludeContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.syntaxhiglighting.<a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlightGenerator.html" title="class in com.bradyrussell.uiscoin.lang.syntaxhiglighting">SyntaxHighlightGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html#enterIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">enterIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html" title="class in com.bradyrussell.uiscoin.lang.compiler">IncludeStatementListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html#enterIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">enterIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseListener</a></dt>
 <dd>
@@ -1442,6 +1452,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ExceptionStatementContext.html#%3Cinit%3E(com.bradyrussell.uiscoin.lang.generated.UISCParser.StatementContext)">ExceptionStatementContext(UISCParser.StatementContext)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ExceptionStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ExceptionStatementContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#exists(java.lang.String)">exists(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#exists(java.lang.String)">exists(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html#exitAddressOfVariableExpression(com.bradyrussell.uiscoin.lang.generated.UISCParser.AddressOfVariableExpressionContext)">exitAddressOfVariableExpression(UISCParser.AddressOfVariableExpressionContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseListener</a></dt>
 <dd>
 <div class="block">Exit a parse tree produced by the <code>addressOfVariableExpression</code>
@@ -1839,6 +1853,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Exit a parse tree produced by <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#include()"><code>UISCParser.include()</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html#exitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">exitIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html" title="class in com.bradyrussell.uiscoin.lang.compiler">IncludeStatementListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html#exitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">exitIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseListener.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseListener</a></dt>
 <dd>
 <div class="block">Exit a parse tree produced by the <code>includeStatement</code>
@@ -2605,6 +2621,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/StructDefinition.html#getFieldType(java.lang.String)">getFieldType(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/StructDefinition.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">StructDefinition</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#getFileAsBytes(java.lang.String)">getFileAsBytes(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#getFileAsBytes(java.lang.String)">getFileAsBytes(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#getFileAsString(java.lang.String)">getFileAsString(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#getFileAsString(java.lang.String)">getFileAsString(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlighterBase.html#getGlobalCloseTag()">getGlobalCloseTag()</a></span> - Method in class com.bradyrussell.uiscoin.lang.syntaxhiglighting.<a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlighterBase.html" title="class in com.bradyrussell.uiscoin.lang.syntaxhiglighting">SyntaxHighlighterBase</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlighterHtml.html#getGlobalCloseTag()">getGlobalCloseTag()</a></span> - Method in class com.bradyrussell.uiscoin.lang.syntaxhiglighting.<a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlighterHtml.html" title="class in com.bradyrussell.uiscoin.lang.syntaxhiglighting">SyntaxHighlighterHtml</a></dt>
@@ -2721,6 +2745,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/TypedValue.html#getSymbolAddress()">getSymbolAddress()</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/TypedValue.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">TypedValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html#getText()">getText()</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html" title="class in com.bradyrussell.uiscoin.lang.compiler">IncludeStatementListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlightGenerator.html#getText()">getText()</a></span> - Method in class com.bradyrussell.uiscoin.lang.syntaxhiglighting.<a href="com/bradyrussell/uiscoin/lang/syntaxhiglighting/SyntaxHighlightGenerator.html" title="class in com.bradyrussell.uiscoin.lang.syntaxhiglighting">SyntaxHighlightGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html#getTokenNames()">getTokenNames()</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCLexer</a></dt>
@@ -2754,6 +2780,12 @@ loadScripts(document, 'script');</script>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeBase.html#hasSymbol(java.lang.String)">hasSymbol(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.scope.<a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeBase.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeBase</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeCapture.html#hasSymbol(java.lang.String)">hasSymbol(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.scope.<a href="com/bradyrussell/uiscoin/lang/compiler/scope/ScopeCapture.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeCapture</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html#HEXSTRING">HEXSTRING</a></span> - Static variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCLexer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#HEXSTRING">HEXSTRING</a></span> - Static variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.FlagDataContext.html#HEXSTRING()">HEXSTRING()</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.FlagDataContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.FlagDataContext</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:I">
@@ -2819,6 +2851,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.IncludeStatementContext.html#%3Cinit%3E(com.bradyrussell.uiscoin.lang.generated.UISCParser.StatementContext)">IncludeStatementContext(UISCParser.StatementContext)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.IncludeStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.IncludeStatementContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html" title="class in com.bradyrussell.uiscoin.lang.compiler"><span class="typeNameLink">IncludeStatementListener</span></a> - Class in <a href="com/bradyrussell/uiscoin/lang/compiler/package-summary.html">com.bradyrussell.uiscoin.lang.compiler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html#%3Cinit%3E(org.antlr.v4.runtime.CommonTokenStream,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">IncludeStatementListener(CommonTokenStream, CompilerFileSystem)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/IncludeStatementListener.html" title="class in com.bradyrussell.uiscoin.lang.compiler">IncludeStatementListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#inferredType()">inferredType()</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.TypeContext.html#inferredType()">inferredType()</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.TypeContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.TypeContext</a></dt>
@@ -2862,6 +2898,14 @@ loadScripts(document, 'script');</script>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html#isArray()">isArray()</a></span> - Method in enum com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html#isArray(com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">isArray(PrimitiveType)</a></span> - Static method in enum com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#isDirectory(java.lang.String)">isDirectory(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#isDirectory(java.lang.String)">isDirectory(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#isFile(java.lang.String)">isFile(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#isFile(java.lang.String)">isFile(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html#isNumeric()">isNumeric()</a></span> - Method in enum com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a></dt>
 <dd>&nbsp;</dd>
@@ -2920,6 +2964,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.AssignmentStatementContext.html#lhs_struct">lhs_struct</a></span> - Variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.AssignmentStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.AssignmentStatementContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.OpAndAssignmentStatementContext.html#lhs_struct">lhs_struct</a></span> - Variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.OpAndAssignmentStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.OpAndAssignmentStatementContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html#listDirectory(java.lang.String)">listDirectory(String)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#listDirectory(java.lang.String)">listDirectory(String)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/type/TypedValue.html#longValue">longValue</a></span> - Variable in class com.bradyrussell.uiscoin.lang.compiler.type.<a href="com/bradyrussell/uiscoin/lang/compiler/type/TypedValue.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">TypedValue</a></dt>
 <dd>&nbsp;</dd>
@@ -3051,6 +3099,10 @@ loadScripts(document, 'script');</script>
 </a>
 <h2 class="title">R</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#resolveIncludes(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">resolveIncludes(String, CompilerFileSystem)</a></span> - Static method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html#resolveIncludes(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem,int)">resolveIncludes(String, CompilerFileSystem, int)</a></span> - Static method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMUtil.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMUtil</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ReturnStatementContext.html#%3Cinit%3E(com.bradyrussell.uiscoin.lang.generated.UISCParser.StatementContext)">ReturnStatementContext(UISCParser.StatementContext)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ReturnStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ReturnStatementContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ReturnStatementContext.html#retval">retval</a></span> - Variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.ReturnStatementContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.ReturnStatementContext</a></dt>
@@ -3184,6 +3236,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html#SL_COMMENT">SL_COMMENT</a></span> - Static variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCLexer.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCLexer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#SL_COMMENT">SL_COMMENT</a></span> - Static variable in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem"><span class="typeNameLink">StandardCompilerFileSystem</span></a> - Class in <a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/package-summary.html">com.bradyrussell.uiscoin.lang.compiler.filesystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html#%3Cinit%3E(java.lang.String)">StandardCompilerFileSystem(String)</a></span> - Constructor for class com.bradyrussell.uiscoin.lang.compiler.filesystem.<a href="com/bradyrussell/uiscoin/lang/compiler/filesystem/StandardCompilerFileSystem.html" title="class in com.bradyrussell.uiscoin.lang.compiler.filesystem">StandardCompilerFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.BlockContext.html#statement()">statement()</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.BlockContext.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCParser.BlockContext</a></dt>
 <dd>&nbsp;</dd>
@@ -4366,6 +4422,8 @@ the order they are declared.</div>
 <dd>
 <div class="block">Visit a parse tree produced by <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#flagData()"><code>UISCParser.flagData()</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement(UISCParser.FlagDataStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html#visitFlagDataStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagDataStatementContext)">visitFlagDataStatement(UISCParser.FlagDataStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a></dt>
 <dd>
 <div class="block">Visit a parse tree produced by the <code>flagDataStatement</code>
@@ -4376,6 +4434,8 @@ the order they are declared.</div>
 <div class="block">Visit a parse tree produced by the <code>flagDataStatement</code>
  labeled alternative in <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#statement()"><code>UISCParser.statement()</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement(UISCParser.FlagStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html#visitFlagStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.FlagStatementContext)">visitFlagStatement(UISCParser.FlagStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a></dt>
 <dd>
 <div class="block">Visit a parse tree produced by the <code>flagStatement</code>
@@ -4471,6 +4531,10 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCVisitor.html#visitInclude(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeContext)">visitInclude(UISCParser.IncludeContext)</a></span> - Method in interface com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCVisitor.html" title="interface in com.bradyrussell.uiscoin.lang.generated">UISCVisitor</a></dt>
 <dd>
 <div class="block">Visit a parse tree produced by <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#include()"><code>UISCParser.include()</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
+<dd>
+<div class="block">Begin Statements</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html#visitIncludeStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.IncludeStatementContext)">visitIncludeStatement(UISCParser.IncludeStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a></dt>
 <dd>
@@ -4770,9 +4834,7 @@ the order they are declared.</div>
  labeled alternative in <a href="com/bradyrussell/uiscoin/lang/generated/UISCParser.html#expression()"><code>UISCParser.expression()</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html#visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">visitTryCatchStatement(UISCParser.TryCatchStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.compiler.<a href="com/bradyrussell/uiscoin/lang/compiler/ASMGenerationVisitor.html" title="class in com.bradyrussell.uiscoin.lang.compiler">ASMGenerationVisitor</a></dt>
-<dd>
-<div class="block">Begin Statements</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html#visitTryCatchStatement(com.bradyrussell.uiscoin.lang.generated.UISCParser.TryCatchStatementContext)">visitTryCatchStatement(UISCParser.TryCatchStatementContext)</a></span> - Method in class com.bradyrussell.uiscoin.lang.generated.<a href="com/bradyrussell/uiscoin/lang/generated/UISCBaseVisitor.html" title="class in com.bradyrussell.uiscoin.lang.generated">UISCBaseVisitor</a></dt>
 <dd>
 <div class="block">Visit a parse tree produced by the <code>tryCatchStatement</code>

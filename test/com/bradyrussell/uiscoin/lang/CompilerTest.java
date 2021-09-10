@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 import com.bradyrussell.uiscoin.lang.compiler.ASMUtil;
+import com.bradyrussell.uiscoin.lang.compiler.filesystem.StandardCompilerFileSystem;
 import com.bradyrussell.uiscoin.script.ScriptExecution;
 import com.bradyrussell.uiscoin.script.ScriptParser;
 import com.bradyrussell.uiscoin.script.exception.*;
@@ -37,6 +38,24 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_Include() {
+        String Script =
+                        "include(\"demo.uisc\");\n";
+
+        ASMUtil.defaultFileSystem = new StandardCompilerFileSystem("test/com/bradyrussell/uiscoin/lang/include");
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 42]");
+    }
+
+    @Test
+    public void Test_IncludeBinary() {
+        String Script =
+                        "include(\"demo.uiscb\");\n";
+
+        ASMUtil.defaultFileSystem = new StandardCompilerFileSystem("test/com/bradyrussell/uiscoin/lang/include");
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 123]");
+    }
+
+    @Test
     public void Test_PointerArray() {
         String Script =
                 "void@ x[] = {(void@)1, (void@)2, (void@)3, (void@)4};";
@@ -61,9 +80,21 @@ public class CompilerTest {
                         "auto x = 32;\n" +
                         "auto y = 256;\n" +
                         "auto z = x + y;\n"+
+                        "auto w = (float)4;\n"+
                         "assert(z == 288);";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
+    public void Test_TypeInferenceNeedsBiggerTypeThanExpressionMembers() {
+        String Script =
+                        "auto x = 2147483640;\n" +
+                        "auto y = 2147483641;\n" +
+                        "auto z = x + y;\n"+
+                        "assert(z == 4294967281);";
+
+        //performStandardTests(ASMUtil.compileHLLToASM(Script), null); //todo fix
     }
 
     @Test
@@ -137,6 +168,30 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_Ternary() {
+        String Script =
+                        "auto x = true;\n" +
+                        "assert((x ? 45 : 46) == 45);";
+
+        System.out.println(ASMUtil.compileHLLToASM(Script));
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[1]");
+    }
+
+    @Test
+    public void Test_Flag() {
+        String Script =
+                        "int32 x = 12;\n" +
+                        "int32 y = 38;\n" +
+                        "flag(5);\n" +
+                        "flagdata(0x5235);\n" +
+                        "flagdata(\"string\");\n" +
+                        "assert(x+y == 50);";
+
+        System.out.println(ASMUtil.compileHLLToASM(Script));
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 12] [0, 0, 0, 38]");
+    }
+
+    @Test
     public void Test_ArrayAccess() {
         String Script =
                 "byte a[] = {1, 2, 3, 4};\n" +
@@ -176,6 +231,14 @@ public class CompilerTest {
                         "byte d = (byte)b;\n";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 0, 0, 0, 0, 64] [0, 0, 0, 64] [66, -128, 0, 0] [64]");
+    }
+
+    @Test
+    public void Test_Exponent() {
+        String Script =
+                "float x = 1.e+2;\n";
+
+        //performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 0, 0, 0, 0, 64] [0, 0, 0, 64] [66, -128, 0, 0] [64]"); //todo fix
     }
 
     @Test

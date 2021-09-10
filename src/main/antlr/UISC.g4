@@ -116,7 +116,7 @@ flag:
     ;
 
 flagData:
-    'flagdata' '(' STRING ')' ';'
+    'flagdata' '(' (STRING | HEXSTRING) ')' ';'
     ;
 
 structField:
@@ -169,11 +169,13 @@ LETTER : [a-zA-Z] ;
 
 //NUMBER: (INT | FLOAT) ; better as production rule
 
-INT :   [0-9]+ ;
+INT :   [0-9]+ /*| HEXSTRING*/; // do i want to go through the effort? probably need to make a visitor. or could make a hexliteralexpression but how do i ensure someone doesnt overflow the type
 fragment HEXDIGIT : 'a'..'f' | 'A'..'F' | [0-9]; // todo implement
-fragment EXPONENT : ('e' | 'E') ('+' | '-')? [0-9]+; // todo implement   implement ternary and asm();
+fragment EXPONENT : ('e' | 'E') ('+' | '-')? [0-9]+; // todo implement
 
-FLOAT: (INT) '.' (INT)? (EXPONENT)? /*'f'?*/; // since there are no doubles just use . to indicate floats
+FLOAT: (INT '.' INT? EXPONENT?) |  (INT EXPONENT)/*'f'?*/; // since there are no doubles just use . to indicate floats
+
+HEXSTRING:  '0x' HEXDIGIT (HEXDIGIT)* ;
 
 STRING
     :   '"' StringCharSequence? '"'

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import com.bradyrussell.uiscoin.BytesUtil;
+import com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem;
 import com.bradyrussell.uiscoin.lang.compiler.scope.*;
 import com.bradyrussell.uiscoin.lang.compiler.symbol.*;
 import com.bradyrussell.uiscoin.lang.compiler.type.*;
@@ -72,10 +74,12 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
         CurrentLocalScope = null;
     }
+
     ////////////////////////
+    private final CompilerFileSystem fileSystem;
 
-
-    public ASMGenerationVisitor() {
+    public ASMGenerationVisitor(CompilerFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
         nativeFunctionCallParameters.put("set", 4); // location, position, length, value
         nativeFunctionCallParameters.put("get", 3); // location, position, length
         nativeFunctionCallParameters.put("copy", 5); // sourceLocation, sourcePosition, destinationLocation, destinationPosition, length
@@ -89,8 +93,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         nativeFunctionCallParameters.put("instruction", 0);
     }
 
-    private String getNextLabel(){
-        return "L"+LabelIndex++;
+    private String getNextLabel() {
+        return "L" + LabelIndex++;
     }
 
     //todo Literal calculation visitor? like 2+5+2 would just return 9? or just add to the visitor if both are literals return the calc'd value
@@ -104,11 +108,11 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return QuotedString.substring(1, QuotedString.length() - 1);
     }
 
-    private String getCastedBinaryExpression(UISCParser.ExpressionContext LHS, UISCParser.ExpressionContext RHS, String BinaryOperationForIntegers, String BinaryOperationForFloats){
+    private String getCastedBinaryExpression(UISCParser.ExpressionContext LHS, UISCParser.ExpressionContext RHS, String BinaryOperationForIntegers, String BinaryOperationForFloats) {
         PrimitiveType lhsType = LHS.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
         PrimitiveType rhsType = RHS.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
-        if(lhsType == null || rhsType == null) {
+        if (lhsType == null || rhsType == null) {
             System.out.println("Type null! Cannot determine type: " + lhsType + " and " + rhsType);
             return "TYPE_NULL_" + lhsType + "_AND_" + rhsType + "_ERROR";
         }
@@ -120,7 +124,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "TYPE_MISMATCH_CANNOT_COMBINE_" + lhsType + "_AND_" + rhsType + "_ERROR";
         }
 
-        return visit(LHS) + " " + ASMUtil.generateCastAssembly(lhsType,outputType) + visit(RHS) + " "  + ASMUtil.generateCastAssembly(rhsType,outputType) + (outputType.equals(PrimitiveType.Float) ? BinaryOperationForFloats : BinaryOperationForIntegers) + " ";
+        return visit(LHS) + " " + ASMUtil.generateCastAssembly(lhsType, outputType) + visit(RHS) + " " + ASMUtil.generateCastAssembly(rhsType, outputType) + (outputType.equals(PrimitiveType.Float) ? BinaryOperationForFloats : BinaryOperationForIntegers) + " ";
     }
 
     @Override
@@ -147,24 +151,24 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitStringLiteralExpression(UISCParser.StringLiteralExpressionContext ctx) {
-        return ASMUtil.generateComment("String literal "+ctx.getText()) + "push " + ctx.STRING().getText();
+        return ASMUtil.generateComment("String literal " + ctx.getText()) + "push " + ctx.STRING().getText();
     }
 
     @Override
     public String visitCharLiteralExpression(UISCParser.CharLiteralExpressionContext ctx) {
-        return ASMUtil.generateComment("Char literal "+ctx.getText()) + "push " + ctx.CHAR().getText().replace("'", "\"");
+        return ASMUtil.generateComment("Char literal " + ctx.getText()) + "push " + ctx.CHAR().getText().replace("'", "\"");
     }
 
     @Override
     public String visitBooleanLiteral(UISCParser.BooleanLiteralContext ctx) {
-        if(ctx.nullliteral != null) {
-            return ASMUtil.generateComment("Null literal "+ctx.getText()) + "null";
+        if (ctx.nullliteral != null) {
+            return ASMUtil.generateComment("Null literal " + ctx.getText()) + "null";
         }
-        if(ctx.trueliteral != null) {
-            return ASMUtil.generateComment("True literal "+ctx.getText()) + "true";
+        if (ctx.trueliteral != null) {
+            return ASMUtil.generateComment("True literal " + ctx.getText()) + "true";
         }
-        if(ctx.falseliteral != null) {
-            return ASMUtil.generateComment("False literal "+ctx.getText()) + "false";
+        if (ctx.falseliteral != null) {
+            return ASMUtil.generateComment("False literal " + ctx.getText()) + "false";
         }
         //return ctx.getText(); // this was more elegant but the above is more resistant to future changes
         return "";
@@ -180,8 +184,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     public String visitArrayStringInitialization(UISCParser.ArrayStringInitializationContext ctx) {
         PrimitiveType byKeyword = PrimitiveType.getByKeyword(ctx.type().getText());
 
-        if(byKeyword == null || !PrimitiveType.ByteArray.equals(byKeyword.toArray())) {
-            System.out.println("Cannot string initialize "+byKeyword+" array! " + ctx.ID().getText());
+        if (byKeyword == null || !PrimitiveType.ByteArray.equals(byKeyword.toArray())) {
+            System.out.println("Cannot string initialize " + byKeyword + " array! " + ctx.ID().getText());
             return "TYPE_MISMATCH_" + ctx.ID().getText();
         }
 
@@ -193,17 +197,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "SYMBOL_REDEFINITION_" + ctx.ID().getText();
         }
 
-        return ASMUtil.generateComment("Array string initialization "+ctx.getText()) + " push \"" + strValue + "\"" + ASMUtil.generateStoreAddress(address)/*" push [" + address + "] put"*/;
+        return ASMUtil.generateComment("Array string initialization " + ctx.getText()) + " push \"" + strValue + "\"" + ASMUtil.generateStoreAddress(address)/*" push [" + address + "] put"*/;
     }
 
     @Override
     public String visitArrayAssignmentInitialization(UISCParser.ArrayAssignmentInitializationContext ctx) {
-        if(ctx.type().primitiveType() == null){
+        if (ctx.type().primitiveType() == null) {
 
             StructDefinition structDefinition = getCurrentScope().findStructDefinition(ctx.type().structType().getText());
 
-            if(structDefinition == null){
-                throw new UnsupportedOperationException("Struct type "+ctx.type().structType().getText()+" was not defined in this scope.");
+            if (structDefinition == null) {
+                throw new UnsupportedOperationException("Struct type " + ctx.type().structType().getText() + " was not defined in this scope.");
             }
 
             int address = getCurrentScope().declareArray(ctx.ID().getText(), null, Integer.parseInt(ctx.INT().getText()));
@@ -213,7 +217,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return "SYMBOL_REDEFINITION_" + ctx.ID().getText();
             }
 
-            if(ctx.expression() != null) {
+            if (ctx.expression() != null) {
                 throw new UnsupportedOperationException("Value initializing struct arrays is not supported;");
                 /*PrimitiveType expressionType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
                 if(!symbolType.equals(expressionType)) {
@@ -224,33 +228,33 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return visit(ctx.expression()) +" "+ASMUtil.generateStoreAddress(address);*/
             }
 
-            return ASMUtil.generatePushNumberLiteralCast(Integer.toString(structDefinition.getSize() * Integer.parseInt(ctx.INT().getText())), PrimitiveType.Int32)+" alloc "+ ASMUtil.generateStoreAddress(address);//"push ["+address+"] put";
+            return ASMUtil.generatePushNumberLiteralCast(Integer.toString(structDefinition.getSize() * Integer.parseInt(ctx.INT().getText())), PrimitiveType.Int32) + " alloc " + ASMUtil.generateStoreAddress(address);//"push ["+address+"] put";
         }
 
         PrimitiveType symbolType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
 
-        if(symbolType == null){
+        if (symbolType == null) {
             throw new UnsupportedOperationException("Struct array assignment not yet implemented");
         }
 
-        int address = getCurrentScope().declareArray(ctx.ID().getText(), symbolType,Integer.parseInt(ctx.INT().getText()));
+        int address = getCurrentScope().declareArray(ctx.ID().getText(), symbolType, Integer.parseInt(ctx.INT().getText()));
 
         if (address < 0) {
             System.out.println("Symbol was already defined in this scope! " + ctx.ID().getText());
             return "SYMBOL_REDEFINITION_" + ctx.ID().getText();
         }
 
-        if(ctx.expression() != null) {
+        if (ctx.expression() != null) {
             PrimitiveType expressionType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
-            if(!symbolType.equals(expressionType)) {
-                System.out.println("Cannot initialize "+symbolType+" array with "+expressionType+"! " + ctx.ID().getText());
+            if (!symbolType.equals(expressionType)) {
+                System.out.println("Cannot initialize " + symbolType + " array with " + expressionType + "! " + ctx.ID().getText());
                 return "TYPE_MISMATCH_" + ctx.ID().getText();
             }
 
-            return visit(ctx.expression()) +" "+ ASMUtil.generateStoreAddress(address);
+            return visit(ctx.expression()) + " " + ASMUtil.generateStoreAddress(address);
         }
 
-        return ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbolType.getSize() * Integer.parseInt(ctx.INT().getText())),PrimitiveType.Int32)+" alloc "+ ASMUtil.generateStoreAddress(address);//"push ["+address+"] put";
+        return ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbolType.getSize() * Integer.parseInt(ctx.INT().getText())), PrimitiveType.Int32) + " alloc " + ASMUtil.generateStoreAddress(address);//"push ["+address+"] put";
     }
 
     @Override
@@ -258,16 +262,16 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PrimitiveType primitiveType = null;
 
-        if(ctx.type().inferredType() != null) {
+        if (ctx.type().inferredType() != null) {
             primitiveType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
         }
 
-        if(ctx.type().primitiveType() != null){
+        if (ctx.type().primitiveType() != null) {
             primitiveType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
         }
 
-        if(primitiveType != null){
-            if(ctx.constant == null) {
+        if (primitiveType != null) {
+            if (ctx.constant == null) {
                 int address = getCurrentScope().declareSymbol(ctx.ID().getText(), primitiveType);
 
                 if (address < 0) {
@@ -280,7 +284,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 if (ctx.expression() != null) {
                     PrimitiveType rhsType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
-                    if(rhsType == null) throw new UnsupportedOperationException("Could not determine the type of: "+ctx.expression().getText());
+                    if (rhsType == null)
+                        throw new UnsupportedOperationException("Could not determine the type of: " + ctx.expression().getText());
 
                     boolean bShouldWiden = false;
 
@@ -297,49 +302,49 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 }
                 return "";
             } else {
-                if(getCurrentScope().findScopeContaining(ctx.ID().getText()) != null) {
+                if (getCurrentScope().findScopeContaining(ctx.ID().getText()) != null) {
                     System.out.println("Symbol was already defined in this scope! " + ctx.ID().getText());
                     return "SYMBOL_REDEFINITION_" + ctx.ID().getText();
                 }
 
                 if (ctx.expression() != null) {
-                    if(ctx.expression() instanceof UISCParser.NumberLiteralExpressionContext) {
+                    if (ctx.expression() instanceof UISCParser.NumberLiteralExpressionContext) {
                         UISCParser.NumberLiteralExpressionContext expression = (UISCParser.NumberLiteralExpressionContext) ctx.expression();
 
                         TypedValue constantValue;
 
                         if (expression.number().INT() != null) {
-                            constantValue = new TypedValue(primitiveType,Long.parseLong(expression.number().INT().getText()));
+                            constantValue = new TypedValue(primitiveType, Long.parseLong(expression.number().INT().getText()));
                         } else {
                             constantValue = new TypedValue(Float.parseFloat(expression.number().FLOAT().getText()));
                         }
 
                         getCurrentScope().declareConstantInlineSymbol(ctx.ID().getText(), constantValue);
-                        System.out.println(">>Defined constant "+ctx.ID().getText()+" of type "+constantValue.type+" with value "+constantValue);
+                        System.out.println(">>Defined constant " + ctx.ID().getText() + " of type " + constantValue.type + " with value " + constantValue);
                         return "";
                     } else {
                         System.out.println("Cannot use that rvalue as a constant!");
-                        return "INVALID_CONSTANT_RVALUE_"+ctx.ID().getText();
+                        return "INVALID_CONSTANT_RVALUE_" + ctx.ID().getText();
                     }
                 }
                 System.out.println("Must specify constant value!");
-                return "INVALID_CONSTANT_"+ctx.ID().getText();
+                return "INVALID_CONSTANT_" + ctx.ID().getText();
             }
         }
 
-        if(ctx.type().structType() != null){
-            if(ctx.type().pointer() != null) {
+        if (ctx.type().structType() != null) {
+            if (ctx.type().pointer() != null) {
                 throw new UnsupportedOperationException("Struct pointers are not yet implemented.");
             }
 
-            int address = getCurrentScope().declareStruct(ctx.ID().getText(),ctx.type().structType().getText());
+            int address = getCurrentScope().declareStruct(ctx.ID().getText(), ctx.type().structType().getText());
 
             if (address < 0) {
                 System.out.println("Struct symbol was already defined in this scope! " + ctx.ID().getText());
                 return "STRUCT_SYMBOL_REDEFINITION_" + ctx.ID().getText();
             }
 
-            if(ctx.expression() != null) {
+            if (ctx.expression() != null) {
                 throw new UnsupportedOperationException("Assigning struct values on initialization is not yet supported.");
             }
 
@@ -347,16 +352,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return getCurrentScope().findStructDefinition(ctx.type().getText()).generateAllocatorASM() + ASMUtil.generateStoreAddress(address);
         }
 
-        throw new UnsupportedOperationException("Invalid variable initialization: "+ctx.getText());
+        throw new UnsupportedOperationException("Invalid variable initialization: " + ctx.getText());
     }
 
-    /** End Initialization */
-
+    /**
+     * End Initialization
+     */
 
 
     @Override
     public String visitFunctionCallStatement(UISCParser.FunctionCallStatementContext ctx) {
-        if(ctx.expression() instanceof UISCParser.FunctionCallExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.FunctionCallExpressionContext) {
             UISCParser.FunctionCallExpressionContext call = (UISCParser.FunctionCallExpressionContext) ctx.expression();
             ScopeBase scopeContaining = getCurrentScope().findScopeContaining(call.ID().getText());
             if (scopeContaining == null) {
@@ -371,36 +377,70 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return "FUNCTION_NOT_PROPERLY_DEFINED_" + call.ID().getText();
             }
 
-            if(functionSymbol.Symbol.type.equals(PrimitiveType.Void)) {
+            if (functionSymbol.Symbol.type.equals(PrimitiveType.Void)) {
                 return visit(ctx.expression()); // this function call doesnt return a value
             }
-            System.out.println("Warning: Result of function call on line "+ctx.start.getLine()+" is ignored.");
+            System.out.println("Warning: Result of function call on line " + ctx.start.getLine() + " is ignored.");
             return visit(ctx.expression()) + " drop"; // this function call doesnt use the retval, drop it. like:  add(1,2);
         }
 
-        if(ctx.expression() instanceof UISCParser.NativeCallExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.NativeCallExpressionContext) {
             UISCParser.NativeCallExpressionContext call = (UISCParser.NativeCallExpressionContext) ctx.expression();
             PrimitiveType nativeCallType = call.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
-            if(PrimitiveType.Void.equals(nativeCallType)) {
+            if (PrimitiveType.Void.equals(nativeCallType)) {
                 return visit(ctx.expression()); // this function call doesnt return a value
             }
-            System.out.println("Warning: Result of function call on line "+ctx.start.getLine()+" is ignored.");
+            System.out.println("Warning: Result of function call on line " + ctx.start.getLine() + " is ignored.");
             return visit(ctx.expression()) + " drop"; // this function call doesnt use the retval, drop it. like:  add(1,2);
         }
 
-        if(ctx.expression() instanceof UISCParser.PostfixOpExpressionContext || ctx.expression() instanceof UISCParser.PrefixOpExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.PostfixOpExpressionContext || ctx.expression() instanceof UISCParser.PrefixOpExpressionContext) {
             return super.visitFunctionCallStatement(ctx) + " drop"; // this call doesnt use the retval, drop it.
         }
 
-        System.out.println("Warning: Removing unused statement: "+ctx.expression().getText());
-        return ASMUtil.generateComment("UNUSED_STATEMENT_"+ctx.expression().getText()); // this is an unexpected expression that does nothing like: 1 + 2;
+        System.out.println("Warning: Removing unused statement: " + ctx.expression().getText());
+        return ASMUtil.generateComment("UNUSED_STATEMENT_" + ctx.expression().getText()); // this is an unexpected expression that does nothing like: 1 + 2;
     }
+
 
     /**
      * Begin Statements
      */
 
+    @Override
+    public String visitIncludeStatement(UISCParser.IncludeStatementContext ctx) {
+        if (fileSystem == null) return "INCLUDE_STATEMENT_ERROR_NULL_FILESYSTEM";
+        if (ctx.include() != null && ctx.include().STRING() != null) {
+            String pathQuoted = ctx.include().STRING().getText();
+            String path = pathQuoted.substring(1, pathQuoted.length() - 1);
+            if (fileSystem.exists(path) && fileSystem.isFile(path)) {
+                if (path.toLowerCase().endsWith(".uisc")) {
+                    return "INCLUDE_STATEMENT_ERROR_CANNOT_HANDLE_UISC_FILES_AT_THIS_LEVEL";
+                }
+                if (path.toLowerCase().endsWith(".uiscb")) {
+                    return ASMUtil.generateComment("Begin Included Binary File: " + path) + "0x" + BytesUtil.bytesToHex(fileSystem.getFileAsBytes(path)) + ASMUtil.generateComment("End Included Binary File: " + path) + "\n";
+                } else {
+                    return "INCLUDE_STATEMENT_ERROR_FILE_UNKNOWN_EXTENSION_" + path;
+                }
+            } else {
+                return "INCLUDE_STATEMENT_ERROR_FILE_NOT_FOUND_" + path;
+            }
+        }
+        return "INCLUDE_STATEMENT_ERROR_INVALID_SYNTAX";
+    }
 
+    @Override
+    public String visitFlagStatement(UISCParser.FlagStatementContext ctx) {
+        if (ctx.flag() != null && ctx.flag().INT() != null) {
+            return "flag " + Integer.parseInt(ctx.flag().INT().getText());
+        }
+        return "INVALID_FLAG_STATEMENT_SYNTAX";
+    }
+
+    @Override
+    public String visitFlagDataStatement(UISCParser.FlagDataStatementContext ctx) {
+        return "flagdata " + ctx.flagData().getChild(2).getText(); // asm compiler handles strings and hex strings
+    }
 
     @Override
     public String visitTryCatchStatement(UISCParser.TryCatchStatementContext ctx) {
@@ -410,25 +450,25 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         // put inside a virtualscript so returns are caught
         // execute and jumpif over the catch block if returned true
 
-       // ScopeCapture captureScope = PushLocalScopeCapture("TryStatement");
+        // ScopeCapture captureScope = PushLocalScopeCapture("TryStatement");
 
         //depth push {fxn} call verify
 
         PushLocalScope("TryStatement");
 
-        if(ctx.catchStatement() == null) {
+        if (ctx.catchStatement() == null) {
             // try without catch. just ignores returns
-            tryCatchAsm.append(" depth "+ ASMUtil.generatePushASMString(visit(ctx.tryStatement()))+" call drop ");
+            tryCatchAsm.append(" depth " + ASMUtil.generatePushASMString(visit(ctx.tryStatement())) + " call drop ");
         } else {
             String endLabel = getNextLabel();
-            tryCatchAsm.append(" depth "+ ASMUtil.generatePushASMString(visit(ctx.tryStatement()))+" call gotoif "+endLabel);
+            tryCatchAsm.append(" depth " + ASMUtil.generatePushASMString(visit(ctx.tryStatement())) + " call gotoif " + endLabel);
             tryCatchAsm.append(visit(ctx.catchStatement())); // catch block
-            tryCatchAsm.append(" :"+endLabel);
+            tryCatchAsm.append(" :" + endLabel);
         }
 
         PopLocalScope();
 
-      //  return ASMUtil.generateComment("Try statement ") + captureScope.generateCaptureASM() + tryCatchAsm.toString();
+        //  return ASMUtil.generateComment("Try statement ") + captureScope.generateCaptureASM() + tryCatchAsm.toString();
 
 
 /*        if(ctx.catchStatement() != null){
@@ -445,36 +485,37 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitException(UISCParser.ExceptionContext ctx) {
-        return ASMUtil.generateComment("Exception "+ctx.getText()) + visit(ctx.exprList()) + " return ";
+        return ASMUtil.generateComment("Exception " + ctx.getText()) + visit(ctx.exprList()) + " return ";
     }
 
     @Override
     public String visitAssignmentStatement(UISCParser.AssignmentStatementContext ctx) {
-        if(ctx.lhs == null) {
+        if (ctx.lhs == null) {
             ScopeBase scopeContainingStruct = getCurrentScope().findScopeContaining(ctx.lhs_struct.structname.getText());
 
-            if(scopeContainingStruct == null){
+            if (scopeContainingStruct == null) {
                 System.out.println("Undefined struct " + ctx.lhs_struct.structname.getText());
                 return "STRUCT_NOT_DEFINED_" + ctx.lhs_struct.structname.getText();
             }
 
             SymbolStruct symbol = (SymbolStruct) scopeContainingStruct.getSymbol(ctx.lhs_struct.structname.getText());
 
-            if(ctx.lhs_struct.structArrayIndex != null) throw new UnsupportedOperationException("you have an array of structs??? ");
+            if (ctx.lhs_struct.structArrayIndex != null)
+                throw new UnsupportedOperationException("you have an array of structs??? ");
 
-            if(symbol.struct == null) {
-                throw new UnsupportedOperationException("Struct $"+symbol.address+" "+ctx.lhs_struct.structname.getText()+" symbol is null");
+            if (symbol.struct == null) {
+                throw new UnsupportedOperationException("Struct $" + symbol.address + " " + ctx.lhs_struct.structname.getText() + " symbol is null");
             }
 
             PrimitiveStructOrArrayType structField = symbol.struct.getFieldType(ctx.lhs_struct.fieldname.getText());
 
-            if(structField.isStruct()) {
+            if (structField.isStruct()) {
                 throw new UnsupportedOperationException("Struct as member of struct not yet implemented");
             }
 
-            if(structField.PrimitiveType == null){
+            if (structField.PrimitiveType == null) {
                 System.out.println("Undefined field " + ctx.lhs_struct.structname.getText() + "." + ctx.lhs_struct.fieldname.getText());
-                return "FIELD_NOT_DEFINED_"+ ctx.lhs_struct.structname.getText() + "." +  ctx.lhs_struct.fieldname.getText();
+                return "FIELD_NOT_DEFINED_" + ctx.lhs_struct.structname.getText() + "." + ctx.lhs_struct.fieldname.getText();
             }
 
             PrimitiveType rhsType = ctx.rhs.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
@@ -490,8 +531,9 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 }
             }
 
-            if(ctx.lhs_struct.fieldArrayIndex != null) {
-                if(!structField.isArray()) throw new UnsupportedOperationException("Struct field array access but struct field is not array! " + ctx.lhs_struct.toString());
+            if (ctx.lhs_struct.fieldArrayIndex != null) {
+                if (!structField.isArray())
+                    throw new UnsupportedOperationException("Struct field array access but struct field is not array! " + ctx.lhs_struct.toString());
                 // value to set                                                                                                   struct base address                 struct field setter
                 ///////////////////////////////////////////////////
 
@@ -502,12 +544,12 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return visit(ctx.rhs) +
                         (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, fieldType.PrimitiveType) : " ") +
                         //"push "+symbol.address+" "+ // push stack element
-                        ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.address), PrimitiveType.Int32)+//
-                        visit(ctx.lhs_struct.fieldArrayIndex) +" "+
+                        ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.address), PrimitiveType.Int32) +//
+                        visit(ctx.lhs_struct.fieldArrayIndex) + " " +
                         ASMUtil.generateCastAssembly(indexType, PrimitiveType.Int32) +// push array index auto casted to int
-                        (fieldType.PrimitiveType.getSize() == 1 ? "" : (ASMUtil.generatePushNumberLiteralCast(Integer.toString(fieldType.PrimitiveType.getSize()), PrimitiveType.Int32)+" multiply"))+ // multiply by sizeof to get beginIndex, unless SizeOf is 1
+                        (fieldType.PrimitiveType.getSize() == 1 ? "" : (ASMUtil.generatePushNumberLiteralCast(Integer.toString(fieldType.PrimitiveType.getSize()), PrimitiveType.Int32) + " multiply")) + // multiply by sizeof to get beginIndex, unless SizeOf is 1
                         (symbol.struct.getFieldByteIndex(ctx.lhs_struct.fieldname.getText()) != 0 ? (ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.struct.getFieldByteIndex(ctx.lhs_struct.fieldname.getText())), PrimitiveType.Int32) + " add") : "") +    // add struct field offset
-                        ASMUtil.generatePushNumberLiteralCast(Integer.toString(fieldType.PrimitiveType.getSize()), PrimitiveType.Int32)+
+                        ASMUtil.generatePushNumberLiteralCast(Integer.toString(fieldType.PrimitiveType.getSize()), PrimitiveType.Int32) +
                         //" push "+fieldType.PrimitiveType.getSize()+
                         " set ";  // push sizeof
 
@@ -515,28 +557,28 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
             }
 
-            if(structField.isPrimitive()) {
+            if (structField.isPrimitive()) {
                 // value to set                                                                                                                                                 struct base address                               struct field setter
                 return visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, structField.PrimitiveType) : "") + ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.address), PrimitiveType.Int32) + symbol.struct.generateFieldSetterASM(ctx.lhs_struct.fieldname.getText());
             }
             //todo struct as struct member
 
-            throw new UnsupportedOperationException("Assign value to struct array member? "+ctx.getText());
+            throw new UnsupportedOperationException("Assign value to struct array member? " + ctx.getText());
         }
 
         ScopeBase scopeContaining = getCurrentScope().findScopeContaining(ctx.lhs.getText());
 
-        if(scopeContaining == null){
+        if (scopeContaining == null) {
             System.out.println("Undefined symbol " + ctx.ID().getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.ID().getText();
         }
 
-        if(scopeContaining.getSymbol(ctx.lhs.getText()) instanceof TypedValue) {
+        if (scopeContaining.getSymbol(ctx.lhs.getText()) instanceof TypedValue) {
             System.out.println("Assigning to constant " + ctx.ID().getText());
             return "ASSIGN_TO_CONSTANT_" + ctx.ID().getText();
         }
 
-        if(scopeContaining.getSymbol(ctx.lhs.getText()) instanceof SymbolStruct) {
+        if (scopeContaining.getSymbol(ctx.lhs.getText()) instanceof SymbolStruct) {
             throw new UnsupportedOperationException("Assigning whole struct values not yet supported.");
         }
 
@@ -565,8 +607,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : "") + symbol.generateSetSymbolASM();
         } else {
             PrimitiveType indexType = ctx.arrayIndex.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
-            return ASMUtil.generateComment("Assignment statement "+ctx.getText()) + visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : " ") +
-                    ASMUtil.generateStoreArrayElement(symbol.address, visit(ctx.arrayIndex) +" "+ ASMUtil.generateCastAssembly(indexType, PrimitiveType.Int32), symbol.type.getSize());
+            return ASMUtil.generateComment("Assignment statement " + ctx.getText()) + visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : " ") +
+                    ASMUtil.generateStoreArrayElement(symbol.address, visit(ctx.arrayIndex) + " " + ASMUtil.generateCastAssembly(indexType, PrimitiveType.Int32), symbol.type.getSize());
 /*            return ASMUtil.generateComment("Assignment statement "+ctx.getText()) + visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : " ") +
                     "push "+symbol.address+" "+ // push stack element
                     visit(ctx.arrayIndex) +" "+ ASMUtil.generateCastAssembly(indexType, PrimitiveType.Int32) +// push array index auto casted to int
@@ -579,7 +621,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                     " push "+symbol.type.getSize()+
                     " set ";  // push sizeof*/
 
-           // return visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : "") + " push " + symbol.address + " " + visit(ctx.arrayIndex) + " push " + /*sizeof type*/symbol.type.getSize() + " set";
+            // return visit(ctx.rhs) + (bShouldWiden ? " " + ASMUtil.generateCastAssembly(rhsType, symbol.type) : "") + " push " + symbol.address + " " + visit(ctx.arrayIndex) + " push " + /*sizeof type*/symbol.type.getSize() + " set";
         }
     }
 
@@ -588,36 +630,36 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         String opAsm = null;
 
         switch (ctx.op.getText()) {
-            case "+=" ->{
+            case "+=" -> {
                 opAsm = "add";
             }
-            case "-=" ->{
+            case "-=" -> {
                 opAsm = "subtract";
             }
-            case "*=" ->{
+            case "*=" -> {
                 opAsm = "multiply";
             }
-            case "/=" ->{
+            case "/=" -> {
                 opAsm = "divide";
             }
-            case "&=" ->{
+            case "&=" -> {
                 opAsm = "bitand";
             }
-            case "|=" ->{
+            case "|=" -> {
                 opAsm = "bitor";
             }
-            case "%=" ->{
+            case "%=" -> {
                 opAsm = "modulo";
             }
         }
 
-        if(opAsm == null){
-            throw new UnsupportedOperationException("Invalid operator: "+ctx.op.getText());
+        if (opAsm == null) {
+            throw new UnsupportedOperationException("Invalid operator: " + ctx.op.getText());
         }
 
         ScopeBase scopeContaining = getCurrentScope().findScopeContaining(ctx.lhs.getText());
 
-        if(scopeContaining == null){
+        if (scopeContaining == null) {
             System.out.println("Undefined symbol " + ctx.lhs.getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.lhs.getText();
         }
@@ -626,10 +668,10 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PrimitiveType rhsType = ctx.rhs.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
-        if(rhsType != null && rhsType.widensTo(symbol.type)) {
+        if (rhsType != null && rhsType.widensTo(symbol.type)) {
 
 
-            return symbol.generateGetSymbolASM() + " " + visit(ctx.rhs) + " " + opAsm + " "+ symbol.generateSetSymbolASM();
+            return symbol.generateGetSymbolASM() + " " + visit(ctx.rhs) + " " + opAsm + " " + symbol.generateSetSymbolASM();
         } else {
             System.out.println("Type mismatch! Expected " + symbol.type + " found " + rhsType);
             return "OPANDASSIGN_TYPE_MISMATCH_EXPECTED_" + symbol.type + "_FOUND_" + rhsType + "_ERROR";
@@ -638,20 +680,20 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitReturnStatement(UISCParser.ReturnStatementContext ctx) {
-        if(ctx.retval == null) return " nop";
+        if (ctx.retval == null) return " nop";
         PrimitiveType returnedType = ctx.retval.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
         RuleContext parent = ctx.parent;
         while (parent != null && !(parent instanceof UISCParser.FunctionDeclarationContext)) parent = parent.parent;
-        UISCParser.FunctionDeclarationContext functionDeclaration = (UISCParser.FunctionDeclarationContext)parent;
+        UISCParser.FunctionDeclarationContext functionDeclaration = (UISCParser.FunctionDeclarationContext) parent;
 
-        if(functionDeclaration == null) {
+        if (functionDeclaration == null) {
             System.out.println("Return outside of function declaration " + ctx.getText());
             return "RETURN_OUTSIDE_FUNCTION_" + ctx.getText() + "_ERROR";
         } else {
             PrimitiveType definedReturnType = PrimitiveType.getByKeyword(functionDeclaration.type().getText());
-            if(returnedType.widensTo(definedReturnType)) {
-                return ASMUtil.generateComment("Return statement "+ctx.getText()) + " "+visit(ctx.retval)+ASMUtil.generateCastAssembly(returnedType,definedReturnType);
+            if (returnedType.widensTo(definedReturnType)) {
+                return ASMUtil.generateComment("Return statement " + ctx.getText()) + " " + visit(ctx.retval) + ASMUtil.generateCastAssembly(returnedType, definedReturnType);
             } else {
                 System.out.println("Type mismatch! Expected " + definedReturnType + " found " + returnedType);
                 return "RETURN_TYPE_MISMATCH_EXPECTED_" + definedReturnType + "_FOUND_" + returnedType + "_ERROR";
@@ -672,7 +714,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         StringBuilder asm = new StringBuilder();
 
-        if(ctx.elseifStatement().size() == 0) { // optimized if no else ifs
+        if (ctx.elseifStatement().size() == 0) { // optimized if no else ifs
             /*
             if()
             condition
@@ -687,7 +729,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             asm.append(visit(ctx.conditional)); // condition
             asm.append(" gotoif ").append(ifBlockLabel).append(" "); // gotoif true
             PushLocalScope("IfStatement_ElseBlock");
-            if(ctx.elseStatement() != null) asm.append(visit(ctx.elseStatement())); // falseblock
+            if (ctx.elseStatement() != null) asm.append(visit(ctx.elseStatement())); // falseblock
             PopLocalScope();
             asm.append(" goto ").append(endLabel); // goto end
             asm.append(" :").append(ifBlockLabel).append(" "); // :true
@@ -746,24 +788,24 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             asm.append(" goto ").append(endLabel); // goto end
 
             for (int i = 0; i < ctx.elseifStatement().size(); i++) {
-                PushLocalScope("IfStatement_ElseIfBlock_"+i);
+                PushLocalScope("IfStatement_ElseIfBlock_" + i);
                 asm.append(" :").append(elseIfLabels.get(i)).append(" "); // :elifN
                 asm.append(visit(ctx.elseifStatement().get(i)));
-                if(i < ctx.elseifStatement().size()-1) asm.append(" goto ").append(endLabel); // goto end (skip last)
+                if (i < ctx.elseifStatement().size() - 1) asm.append(" goto ").append(endLabel); // goto end (skip last)
                 PopLocalScope();
             }
 
             asm.append(" :").append(endLabel); // :end
         }
 
-        return ASMUtil.generateComment("If statement "+ctx.conditional.getText()) + asm.toString();
+        return ASMUtil.generateComment("If statement " + ctx.conditional.getText()) + asm.toString();
     }
 
     @Override
     public String visitUforiStatement(UISCParser.UforiStatementContext ctx) { // loop unrolling
         int ItBegin, ItEnd;
 
-        if(ctx.iterationsEnd != null) {
+        if (ctx.iterationsEnd != null) {
             ItBegin = Integer.parseInt(ctx.iterations.getText());
             ItEnd = Integer.parseInt(ctx.iterationsEnd.getText());
         } else {
@@ -774,20 +816,20 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         PushLocalScope("ForIStatement");
 
 
-      //  int IteratorAddress = getCurrentScope().declareSymbol(ctx.ID().getText(), Type.getByKeyword(ctx.type().getText()));
+        //  int IteratorAddress = getCurrentScope().declareSymbol(ctx.ID().getText(), Type.getByKeyword(ctx.type().getText()));
 
         StringBuilder forIStatement = new StringBuilder();
 
         for (int i = ItBegin; i < ItEnd; i++) {
-            PushLocalScope("ForIStatement_Inner_"+i);
-            getCurrentScope().declareConstantInlineSymbol(ctx.ID().getText(), new TypedValue(PrimitiveType.getByKeyword(ctx.type().getText()),i));
+            PushLocalScope("ForIStatement_Inner_" + i);
+            getCurrentScope().declareConstantInlineSymbol(ctx.ID().getText(), new TypedValue(PrimitiveType.getByKeyword(ctx.type().getText()), i));
             forIStatement.append(visit(ctx.forbody));
             PopLocalScope();
         }
 
         PopLocalScope();
 
-        return ASMUtil.generateComment("For I Statement "+ItBegin+", "+ItEnd) + forIStatement.toString();
+        return ASMUtil.generateComment("For I Statement " + ItBegin + ", " + ItEnd) + forIStatement.toString();
     }
 
     @Override
@@ -805,34 +847,34 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "ARRAY_NOT_PROPERLY_DEFINED_" + ctx.ID().getText();
         }
 
-        PushLocalScope("ForEachStatement_"+ctx.ID().getText());
+        PushLocalScope("ForEachStatement_" + ctx.ID().getText());
 
         StringBuilder forEachStatement = new StringBuilder();
 
-        if(ctx.varDeclaration() instanceof UISCParser.VarInitializationContext) {
+        if (ctx.varDeclaration() instanceof UISCParser.VarInitializationContext) {
             UISCParser.VarInitializationContext varDeclaration = (UISCParser.VarInitializationContext) ctx.varDeclaration();
 
             PrimitiveType varType = PrimitiveType.getByKeyword(varDeclaration.type().getText());
 
-            if(!symbol.type.widensTo(varType)) {
+            if (!symbol.type.widensTo(varType)) {
                 System.out.println("The foreach element was not the correct type. " + varDeclaration.getText());
                 return "FOREACH_VAR_NOT_CORRECT_TYPE_EXPECTED_" + symbol.type;
             }
 
-            if(varDeclaration.constant != null || varDeclaration.expression() != null || varType == null) {
+            if (varDeclaration.constant != null || varDeclaration.expression() != null || varType == null) {
                 System.out.println("The foreach element was not properly defined. It cannot be a constant or assigned a value and must have a type. " + varDeclaration.getText());
                 return "FOREACH_VAR_NOT_PROPERLY_DEFINED_" + ctx.ID().getText();
             }
 
             for (int i = 0; i < symbol.length; i++) {
-                PushLocalScope("ForEachStatement_"+ctx.arrayToLoop.getText()+"_Inner_"+i);
+                PushLocalScope("ForEachStatement_" + ctx.arrayToLoop.getText() + "_Inner_" + i);
 
                 int varAddress = getCurrentScope().declareSymbol(varDeclaration.ID().getText(), varType);
 //todo off by one to the right? dont think so anymore
-                forEachStatement.append( "push "+symbol.address+ // push stack element
-                        " push "+i +// push array index
-                        " push "+symbol.type.getSize()+ // multiply by sizeof to get beginIndex
-                        " multiply push "+symbol.type.getSize()+
+                forEachStatement.append("push " + symbol.address + // push stack element
+                        " push " + i +// push array index
+                        " push " + symbol.type.getSize() + // multiply by sizeof to get beginIndex
+                        " multiply push " + symbol.type.getSize() +
                         " get " + ASMUtil.generateCastAssembly(symbol.type, varType) + // auto widen to foreach var type
                         ASMUtil.generateStoreAddress(varAddress) // put the array element into the foreach var
                 );
@@ -846,20 +888,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PopLocalScope();
 
-        return ASMUtil.generateComment("ForEach Statement "+ctx.arrayToLoop.getText()) + forEachStatement.toString();
+        return ASMUtil.generateComment("ForEach Statement " + ctx.arrayToLoop.getText()) + forEachStatement.toString();
 
     }
 
     @Override
     public String visitAssertion(UISCParser.AssertionContext ctx) {
-        return ASMUtil.generateComment("Assertion "+ctx.getText()) + visit(ctx.expression())+" verify";
+        return ASMUtil.generateComment("Assertion " + ctx.getText()) + visit(ctx.expression()) + " verify";
     }
 
 
-
     /** End Statements */
-
-
 
 
     /**
@@ -868,17 +907,17 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitComparisonExpression(UISCParser.ComparisonExpressionContext ctx) {
-        switch (ctx.op.getText()){
-            case "<" ->{
+        switch (ctx.op.getText()) {
+            case "<" -> {
                 return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthan", " lessthan");
             }
-            case "<=" ->{
+            case "<=" -> {
                 return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthanequal", " lessthanequal");
             }
-            case ">" ->{
+            case ">" -> {
                 return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthan", " greaterthan");
             }
-            case ">=" ->{
+            case ">=" -> {
                 return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthanequal", " greaterthanequal");
             }
             default -> {
@@ -889,26 +928,26 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitAssembly(UISCParser.AssemblyContext ctx) {
-        return ASMUtil.generateComment("Raw ASM "+ctx.getText()) + stripQuotesFromString(ctx.STRING().getText());
+        return ASMUtil.generateComment("Raw ASM " + ctx.getText()) + stripQuotesFromString(ctx.STRING().getText());
     }
 
     @Override
     public String visitModuloExpression(UISCParser.ModuloExpressionContext ctx) {
-        return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"modulo", "convertfloatto32 swap convertfloatto32 swap modulo convert32tofloat"); // dont think there is float mod
+        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "modulo", "convertfloatto32 swap convertfloatto32 swap modulo convert32tofloat"); // dont think there is float mod
     }
 
     @Override
     public String visitAddressOfVariableExpression(UISCParser.AddressOfVariableExpressionContext ctx) {
         ScopeBase scopeContaining = getCurrentScope().findScopeContaining(ctx.ID().getText());
 
-        if(scopeContaining == null){
+        if (scopeContaining == null) {
             System.out.println("Undefined symbol " + ctx.ID().getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.ID().getText();
         }
 
         Object uncastedSymbol = scopeContaining.getSymbol(ctx.ID().getText());
 
-        if(uncastedSymbol instanceof TypedValue) {
+        if (uncastedSymbol instanceof TypedValue) {
             System.out.println("Cannot get the address of constant " + ctx.ID().getText());
             return "ADDRESS_OF_CONSTANT_" + ctx.ID().getText();
         }
@@ -919,12 +958,12 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             System.out.println("Undefined symbol " + ctx.ID().getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.ID().getText();
         }
-        return ASMUtil.generateComment("Address Of variable "+ctx.getText()) + ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.address),PrimitiveType.Int32);
+        return ASMUtil.generateComment("Address Of variable " + ctx.getText()) + ASMUtil.generatePushNumberLiteralCast(Integer.toString(symbol.address), PrimitiveType.Int32);
     }
 
     @Override
     public String visitLengthOfExpression(UISCParser.LengthOfExpressionContext ctx) { // this will return number of bytes in array, not number of elements. divide by sizeof
-        return ASMUtil.generateComment("Length of "+ctx.getText()) + visit(ctx.expression()) + " len swap drop"; // this removes the value which we took the length of
+        return ASMUtil.generateComment("Length of " + ctx.getText()) + visit(ctx.expression()) + " len swap drop"; // this removes the value which we took the length of
     }
 
     @Override
@@ -932,26 +971,26 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         PrimitiveType sizeOfType = PrimitiveType.getByKeyword(ctx.type().getText());
         if (sizeOfType == null) {
             System.out.println("Invalid type! Cannot determine size of invalid type " + ctx.type().getText());
-            return "INVALID_TYPE_" + ctx.type().getText()+"_ERROR";
+            return "INVALID_TYPE_" + ctx.type().getText() + "_ERROR";
         }
 
-        return ASMUtil.generateComment("SizeOf "+ctx.getText()) + "push ["+sizeOfType.getSize()+"]";
+        return ASMUtil.generateComment("SizeOf " + ctx.getText()) + "push [" + sizeOfType.getSize() + "]";
     }
 
 
     @Override
     public String visitBitwiseExpression(UISCParser.BitwiseExpressionContext ctx) {
         if (ctx.op.getText().contains("&")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"bitand", "bitand");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitand", "bitand");
         }
         if (ctx.op.getText().contains("|")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"bitor","bitor");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitor", "bitor");
         }
         if (ctx.op.getText().contains("^")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"bitxor","bitxor");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitxor", "bitxor");
         }
         if (ctx.op.getText().contains("~")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"bitnot","bitnot");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitnot", "bitnot");
         }
         return super.visitBitwiseExpression(ctx);
     }
@@ -960,7 +999,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     public String visitTernaryExpression(UISCParser.TernaryExpressionContext ctx) {
         String truelabel = getNextLabel();
         String falselabel = getNextLabel();
-        return ASMUtil.generateComment("Ternary "+ctx.getText()) + visit(ctx.condition) + " gotoif "+truelabel+" "+ visit(ctx.iffalse) + " goto "+falselabel+" :"+truelabel+" "+visit(ctx.iftrue)+" :"+falselabel;
+        return ASMUtil.generateComment("Ternary " + ctx.getText()) + visit(ctx.condition) + " gotoif " + truelabel + " " + visit(ctx.iffalse) + " goto " + falselabel + " :" + truelabel + " " + visit(ctx.iftrue) + " :" + falselabel;
     }
 
     @Override
@@ -968,19 +1007,19 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         PrimitiveType exprType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope)).fromPointer();
         String castAssembly = ASMUtil.generateCastAssembly(exprType, PrimitiveType.Byte);
 
-        if(exprType == PrimitiveType.Void) {
-            System.out.println("Warning: ValueAt of non pointer ("+ctx.expression().getText()+") returns unknown type (void)!");
+        if (exprType == PrimitiveType.Void) {
+            System.out.println("Warning: ValueAt of non pointer (" + ctx.expression().getText() + ") returns unknown type (void)!");
         }
 
-        return ASMUtil.generateComment("Get Value At variable "+ctx.getText()) + visit(ctx.expression())+castAssembly+" pick ";
+        return ASMUtil.generateComment("Get Value At variable " + ctx.getText()) + visit(ctx.expression()) + castAssembly + " pick ";
     }
 
     @Override
     public String visitCastExpression(UISCParser.CastExpressionContext ctx) {
         PrimitiveType fromType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
-        if(ctx.type().primitiveType() != null){
-           PrimitiveType toType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
+        if (ctx.type().primitiveType() != null) {
+            PrimitiveType toType = ctx.type().pointer() == null ? PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()) : PrimitiveType.getByKeyword(ctx.type().primitiveType().getText()).toPointer();
 
             String castAssembly = ASMUtil.generateCastAssembly(fromType, toType);
 
@@ -989,15 +1028,15 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 return "CANNOT_CAST_FROM_" + fromType + "_TO_" + toType + "_ERROR";
             }
 
-            return ASMUtil.generateComment("Cast "+ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+            return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
         }
 
-        throw new UnsupportedOperationException("Cannot cast to type: "+ctx.type().getText());
+        throw new UnsupportedOperationException("Cannot cast to type: " + ctx.type().getText());
     }
 
     @Override
     public String visitEqualityExpression(UISCParser.EqualityExpressionContext ctx) {
-        return getCastedBinaryExpression(ctx.lhs, ctx.rhs," bytesequal" + (ctx.op.getText().contains("!=") ? " not" : "")," bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""));
+        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""), " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""));
         //return visit(ctx.lhs) + " " + visit(ctx.rhs) + " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : "");
     }
 
@@ -1009,7 +1048,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         // todo negate fails on byte. fix this and we can remove below
         PrimitiveType fromType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
-        if(PrimitiveType.Byte.equals(fromType)) {
+        if (PrimitiveType.Byte.equals(fromType)) {
             return visit(ctx.expression()) + " convert8to32 negate convert32to8";
         } else {
             return visit(ctx.expression()) + " negate";
@@ -1023,19 +1062,19 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitAddSubExpression(UISCParser.AddSubExpressionContext ctx) {
-        if(ctx.lhs instanceof UISCParser.StringLiteralExpressionContext || (ctx.lhs instanceof UISCParser.VariableReferenceExpressionContext && // is this array concat?
-                getCurrentScope().findScopeContaining(((UISCParser.VariableReferenceExpressionContext)ctx.lhs).ID().getText()) != null &&
-                getCurrentScope().findScopeContaining(((UISCParser.VariableReferenceExpressionContext)ctx.lhs).ID().getText()).getSymbol(((UISCParser.VariableReferenceExpressionContext)ctx.lhs).ID().getText()) instanceof SymbolArray)) {
+        if (ctx.lhs instanceof UISCParser.StringLiteralExpressionContext || (ctx.lhs instanceof UISCParser.VariableReferenceExpressionContext && // is this array concat?
+                getCurrentScope().findScopeContaining(((UISCParser.VariableReferenceExpressionContext) ctx.lhs).ID().getText()) != null &&
+                getCurrentScope().findScopeContaining(((UISCParser.VariableReferenceExpressionContext) ctx.lhs).ID().getText()).getSymbol(((UISCParser.VariableReferenceExpressionContext) ctx.lhs).ID().getText()) instanceof SymbolArray)) {
             // todo this will throw off symbol array lengths, so uforeach wouldnt work. dont see how this can work unless the sizes are fixed. maybe use set 0, len*size instead? to force user to create new array long enough
             // yeah could be a void that takes a pointer to fill in
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"append", "append");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "append", "append");
         }
 
         if (ctx.op.getText().contains("+")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"add", "addfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "add", "addfloat");
         }
         if (ctx.op.getText().contains("-")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"subtract","subtractfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "subtract", "subtractfloat");
         }
         return super.visitAddSubExpression(ctx);
     }
@@ -1043,10 +1082,10 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     @Override
     public String visitMultDivExpression(UISCParser.MultDivExpressionContext ctx) {
         if (ctx.op.getText().contains("*")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"multiply","multiplyfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "multiply", "multiplyfloat");
         }
         if (ctx.op.getText().contains("/")) {
-            return getCastedBinaryExpression(ctx.lhs,ctx.rhs,"divide","dividefloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "divide", "dividefloat");
         }
         return super.visitMultDivExpression(ctx);
     }
@@ -1081,16 +1120,16 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     public String visitVariableReferenceExpression(UISCParser.VariableReferenceExpressionContext ctx) {
         ScopeBase scopeContaining = getCurrentScope().findScopeContaining(ctx.ID().getText());
 
-        if(scopeContaining == null){
+        if (scopeContaining == null) {
             System.out.println("Undefined symbol " + ctx.ID().getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.ID().getText();
         }
 
         Object uncastedSymbol = scopeContaining.getSymbol(ctx.ID().getText());
 
-        if(uncastedSymbol instanceof TypedValue) { // constant
-            return ((TypedValue)uncastedSymbol).generateGetSymbolASM();
-           //return "push "+((TypedValue)uncastedSymbol);
+        if (uncastedSymbol instanceof TypedValue) { // constant
+            return ((TypedValue) uncastedSymbol).generateGetSymbolASM();
+            //return "push "+((TypedValue)uncastedSymbol);
         }
 
         SymbolBase symbol = (SymbolBase) uncastedSymbol;
@@ -1099,7 +1138,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             System.out.println("Undefined symbol " + ctx.ID().getText());
             return "SYMBOL_NOT_DEFINED_" + ctx.ID().getText();
         }
-        return ASMUtil.generateComment("Variable reference "+ctx.getText()) + symbol.generateGetSymbolASM();
+        return ASMUtil.generateComment("Variable reference " + ctx.getText()) + symbol.generateGetSymbolASM();
         //return "push [" + symbol.address + "] pick ";
     }
 
@@ -1118,7 +1157,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "FUNCTION_NOT_PROPERLY_DEFINED_" + ctx.ID().getText();
         }
 
-        if(ctx.exprList() != null) {
+        if (ctx.exprList() != null) {
             int numParamsProvided = ctx.exprList().expression().size();
             if (functionSymbol.Symbol.getNumberOfParameters() != numParamsProvided) {
                 System.out.println("Function " + ctx.ID().getText() + " expects " + functionSymbol.Symbol.getNumberOfParameters() + " but only " + numParamsProvided + " were provided.");
@@ -1128,7 +1167,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         StringBuilder sb = new StringBuilder();
 
-        if(ctx.exprList() != null) {
+        if (ctx.exprList() != null) {
             List<UISCParser.ExpressionContext> expression = ctx.exprList().expression();
             for (int i = 0; i < expression.size(); i++) {
                 PrimitiveType providedType = expression.get(i).accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
@@ -1144,15 +1183,15 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             }
         }
 
-        return sb.toString()+ ASMUtil.generateComment("Function call "+ctx.getText()) + // params
-                " depth "+//capture whole stack so we can reference globals. OR do we want to make functions unable to modify global state, only return
+        return sb.toString() + ASMUtil.generateComment("Function call " + ctx.getText()) + // params
+                " depth " +//capture whole stack so we can reference globals. OR do we want to make functions unable to modify global state, only return
                 // if we give the whole stack to functions, then parameters can just refer to their original position if they are var refs.
                 // functions dont need to modify global state if we move to a main method
-               // " push ["+ctx.exprList().expression().size()+"] "+ // number of parameters
-                functionSymbol.generateGetSymbolASM()+
+                // " push ["+ctx.exprList().expression().size()+"] "+ // number of parameters
+                functionSymbol.generateGetSymbolASM() +
                 //" push [" + functionSymbol.Symbol.address + "] pick"+ // get function bytecode
                 "call verify ";// +// execute and ensure it did not fail
-           //     "push ["+ctx.exprList().expression().size()+"] dropn "; // drop function parameters
+        //     "push ["+ctx.exprList().expression().size()+"] dropn "; // drop function parameters
     }
 
     @Override
@@ -1177,12 +1216,12 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         String castAssembly = ASMUtil.generateCastAssembly(indexExpressionType, PrimitiveType.Int32);
 
-        if(castAssembly == null) {
-            System.out.println("Array " + ctx.ID().getText() + " access with unsupported type: "+indexExpressionType);
+        if (castAssembly == null) {
+            System.out.println("Array " + ctx.ID().getText() + " access with unsupported type: " + indexExpressionType);
             return "ARRAY_INDEX_INVALID_TYPE_" + indexExpressionType;
         }
 
-        return ASMUtil.generateLoadArrayElement(symbol.address,visit(ctx.expression())+" "+ castAssembly,SizeOf);
+        return ASMUtil.generateLoadArrayElement(symbol.address, visit(ctx.expression()) + " " + castAssembly, SizeOf);
 /*        return ASMUtil.generateComment("Array access "+ctx.getText()) + "push "+symbol.address+" "+ // push stack element
                 visit(ctx.expression())+" "+ castAssembly +// push array index auto casted to int
                 (SizeOf == 1 ? "" : (" push "+SizeOf+ // multiply by sizeof to get beginIndex, unless SizeOf is 1
@@ -1206,112 +1245,114 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return "STRUCT_NOT_PROPERLY_DEFINED_" + ctx.structField().structname.getText();
         }
 
-        return " push "+ symbol.address + symbol.struct.generateFieldGetterASM(ctx.structField().fieldname.getText());
+        return " push " + symbol.address + symbol.struct.generateFieldGetterASM(ctx.structField().fieldname.getText());
     }
 
     @Override
     public String visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) {
-        if(!nativeFunctionCallParameters.containsKey(ctx.ID().getText())) throw new UnsupportedOperationException("Unknown native call: "+ctx.ID().getText());
+        if (!nativeFunctionCallParameters.containsKey(ctx.ID().getText()))
+            throw new UnsupportedOperationException("Unknown native call: " + ctx.ID().getText());
         int ParamsExpected = nativeFunctionCallParameters.get(ctx.ID().getText());
 
-        if(ParamsExpected != 0 && ctx.exprList().expression() == null) {
-            return "NATIVE_CALL_"+ctx.ID().getText()+"_EXPECTED_"+ParamsExpected+"_PARAMETERS_FOUND_0";
+        if (ParamsExpected != 0 && ctx.exprList().expression() == null) {
+            return "NATIVE_CALL_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected + "_PARAMETERS_FOUND_0";
         }
 
-        if(((ctx.exprList() == null && ParamsExpected > 0)) || ctx.exprList() != null && ctx.exprList().expression().size() != ParamsExpected) {
-            return "NATIVE_CALL_"+ctx.ID().getText()+"_EXPECTED_"+ParamsExpected+"_PARAMETERS_FOUND_"+ctx.exprList().expression().size();
+        if (((ctx.exprList() == null && ParamsExpected > 0)) || ctx.exprList() != null && ctx.exprList().expression().size() != ParamsExpected) {
+            return "NATIVE_CALL_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected + "_PARAMETERS_FOUND_" + ctx.exprList().expression().size();
         }
 
         switch (ctx.ID().getText()) {
-            case "encrypt" ->{
+            case "encrypt" -> {
                 //push key //push message //encryptaes
                 return visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(0)) + " encryptaes";
             }
-            case "decrypt" ->{
+            case "decrypt" -> {
                 //push key //push message //decryptaes
                 return visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(0)) + " decryptaes";
             }
-            case "zip" ->{
+            case "zip" -> {
                 return visit(ctx.exprList().expression(0)) + " zip";
             }
-            case "unzip" ->{
+            case "unzip" -> {
                 return visit(ctx.exprList().expression(0)) + " unzip";
             }
-            case "sha512" ->{
+            case "sha512" -> {
                 return visit(ctx.exprList().expression(0)) + " sha512";
             }
-            case "verifySig" ->{
-                return visit(ctx.exprList().expression(0)) + " "  + visit(ctx.exprList().expression(1)) + " verifysig verify";
+            case "verifySig" -> {
+                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " verifysig verify";
             }
-            case "instruction"->{
+            case "instruction" -> {
                 return " instruction";
             }
-            case "copy"->{
+            case "copy" -> {
                 return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + visit(ctx.exprList().expression(3)) + " " + visit(ctx.exprList().expression(4)) + " copy";
             }
-            case "get"->{
+            case "get" -> {
                 return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + visit(ctx.exprList().expression(3)) + " get";
             }
-            case "set"->{
+            case "set" -> {
                 return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + " set";
             }
         }
-        throw new UnsupportedOperationException("No implementation for native call: "+ctx.ID().getText());
+        throw new UnsupportedOperationException("No implementation for native call: " + ctx.ID().getText());
     }
 
     @Override
     public String visitPostfixOpExpression(UISCParser.PostfixOpExpressionContext ctx) {
 
-        if(ctx.parent instanceof UISCParser.StatementContext) {
-            throw new UnsupportedOperationException("Use prefix increment if you don't need postfix. "+ctx.getText());
+        if (ctx.parent instanceof UISCParser.StatementContext) {
+            throw new UnsupportedOperationException("Use prefix increment if you don't need postfix. " + ctx.getText());
         }
 
         PrimitiveType expressionType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
         //++ doesnt make sense for anything but an id, array access, or struct member access
-        if(ctx.expression() instanceof UISCParser.VariableReferenceExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.VariableReferenceExpressionContext) {
             String originalVariableName = ((UISCParser.VariableReferenceExpressionContext) ctx.expression()).ID().getText();
-            int originalAddress = ((SymbolBase)getCurrentScope().findScopeContaining(originalVariableName).getSymbol(originalVariableName)).address;
+            int originalAddress = ((SymbolBase) getCurrentScope().findScopeContaining(originalVariableName).getSymbol(originalVariableName)).address;
 
             // dup x, add 1,  store to original address, (leaving original x on the stack)
-            return visit(ctx.expression()) + " dup true "+ASMUtil.generateCastAssembly(PrimitiveType.Byte,expressionType)+ (ctx.op.getText().equals("++") ? " add " : " subtract ") + ASMUtil.generateStoreAddress(originalAddress);
+            return visit(ctx.expression()) + " dup true " + ASMUtil.generateCastAssembly(PrimitiveType.Byte, expressionType) + (ctx.op.getText().equals("++") ? " add " : " subtract ") + ASMUtil.generateStoreAddress(originalAddress);
         }
 
-        if(ctx.expression() instanceof UISCParser.ArrayAccessExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.ArrayAccessExpressionContext) {
             throw new UnsupportedOperationException("Postfix increment array access NYI");
         }
 
-        if(ctx.expression() instanceof UISCParser.StructFieldReferenceExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.StructFieldReferenceExpressionContext) {
             throw new UnsupportedOperationException("Postfix increment struct field NYI");
         }
 
-        throw new UnsupportedOperationException("Postfix increment is not supported in this context. "+ctx.getText());
-       // throw new UnsupportedOperationException("Postfix operator not yet implemented");
+        throw new UnsupportedOperationException("Postfix increment is not supported in this context. " + ctx.getText());
+        // throw new UnsupportedOperationException("Postfix operator not yet implemented");
         // return super.visitPostfixOpExpression(ctx);
     }
 
     @Override
     public String visitPrefixOpExpression(UISCParser.PrefixOpExpressionContext ctx) {
         PrimitiveType expressionType = ctx.expression().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
-        if(!expressionType.isNumeric()) throw new UnsupportedOperationException("Cannot "+ctx.op+" non-numeric expression "+ctx.expression().getText());
+        if (!expressionType.isNumeric())
+            throw new UnsupportedOperationException("Cannot " + ctx.op + " non-numeric expression " + ctx.expression().getText());
 
         // for a var ref, array access or struct member we need to store the result
-        if(ctx.expression() instanceof UISCParser.VariableReferenceExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.VariableReferenceExpressionContext) {
             String originalVariableName = ((UISCParser.VariableReferenceExpressionContext) ctx.expression()).ID().getText();
-            int originalAddress = ((SymbolBase)getCurrentScope().findScopeContaining(originalVariableName).getSymbol(originalVariableName)).address;
+            int originalAddress = ((SymbolBase) getCurrentScope().findScopeContaining(originalVariableName).getSymbol(originalVariableName)).address;
 
-            return visit(ctx.expression()) + " true " + ASMUtil.generateCastAssembly(PrimitiveType.Byte, expressionType) + (ctx.op.getText().equals("--") ? "subtract ":"add ") + "dup "+ ASMUtil.generateStoreAddress(originalAddress);
+            return visit(ctx.expression()) + " true " + ASMUtil.generateCastAssembly(PrimitiveType.Byte, expressionType) + (ctx.op.getText().equals("--") ? "subtract " : "add ") + "dup " + ASMUtil.generateStoreAddress(originalAddress);
         }
 
-        if(ctx.expression() instanceof UISCParser.ArrayAccessExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.ArrayAccessExpressionContext) {
             throw new UnsupportedOperationException("Prefix increment array access NYI");
         }
 
-        if(ctx.expression() instanceof UISCParser.StructFieldReferenceExpressionContext) {
+        if (ctx.expression() instanceof UISCParser.StructFieldReferenceExpressionContext) {
             throw new UnsupportedOperationException("Prefix increment struct field NYI");
         }
         // otherwise we just add to it
-        return visit(ctx.expression()) + " true " + ASMUtil.generateCastAssembly(PrimitiveType.Byte, expressionType) + (ctx.op.getText().equals("--") ? "subtract ":"add ");
+        return visit(ctx.expression()) + " true " + ASMUtil.generateCastAssembly(PrimitiveType.Byte, expressionType) + (ctx.op.getText().equals("--") ? "subtract " : "add ");
     }
 
     /**
@@ -1328,14 +1369,14 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PrimitiveType arrayType = ctx.arrayInitializer().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
         PrimitiveType expectedType = PrimitiveType.getByKeyword(ctx.type().getText());
-        if(arrayType == null || (!arrayType.equals(expectedType) && !arrayType.widensTo(expectedType))) {
-            System.out.println("Array " + ctx.ID().getText() + " was not properly initialized: type mismatch expected "+expectedType+" found "+arrayType);
+        if (arrayType == null || (!arrayType.equals(expectedType) && !arrayType.widensTo(expectedType))) {
+            System.out.println("Array " + ctx.ID().getText() + " was not properly initialized: type mismatch expected " + expectedType + " found " + arrayType);
             return "ARRAY_INITIALIZER_TYPE_MISMATCH_" + ctx.ID().getText();
         }
 
         System.out.println("Warning: ArrayValueInitialization assumes each array initializer expression pushes exactly one value onto the stack.");
         // auto widens using visitArrayInitializer();
-        return ASMUtil.generateComment("Array value initialization "+ctx.getText()) + visit(ctx.arrayInitializer()) +
+        return ASMUtil.generateComment("Array value initialization " + ctx.getText()) + visit(ctx.arrayInitializer()) +
                 " push [" + ctx.arrayInitializer().exprList().expression().size() + "] combine " +
                 ASMUtil.generateStoreAddress(getCurrentScope().declareArray(ctx.ID().getText(), expectedType, ctx.arrayInitializer().exprList().expression().size()));//" push [" + getCurrentScope().declareArray(ctx.ID().getText(), expectedType, ctx.arrayInitializer().exprList().expression().size()) + "] put";
     }
@@ -1343,7 +1384,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     // this is how we auto widen array initializers
     @Override
     public String visitArrayInitializer(UISCParser.ArrayInitializerContext ctx) {
-        if(!(ctx.getParent() instanceof UISCParser.ArrayValueInitializationContext)) {
+        if (!(ctx.getParent() instanceof UISCParser.ArrayValueInitializationContext)) {
             System.out.println("Array Initializer is not part of array value initialization!");
             return "ARRAY_INITIALIZER_NOT_EXPECTED_ERROR";
         }
@@ -1357,7 +1398,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             arrayInitializerAsm.append(visit(expressionContext)).append(" ").append(ASMUtil.generateCastAssembly(type, castToType)).append(" ");
         }
 
-        return ASMUtil.generateComment("Array initialization "+ctx.getText()) + arrayInitializerAsm.toString();
+        return ASMUtil.generateComment("Array initialization " + ctx.getText()) + arrayInitializerAsm.toString();
     }
 
     @Override
@@ -1365,26 +1406,26 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         ArrayList<NameAndType> Params = new ArrayList<>();
 
         for (UISCParser.VarDeclarationContext varDeclarationContext : ctx.varDeclaration()) {
-            if(varDeclarationContext instanceof UISCParser.VarInitializationContext) {
+            if (varDeclarationContext instanceof UISCParser.VarInitializationContext) {
                 UISCParser.VarInitializationContext structField = (UISCParser.VarInitializationContext) varDeclarationContext;
 
-                if(structField.constant != null) {
+                if (structField.constant != null) {
                     throw new UnsupportedOperationException("Constants are not allowed in structs (yet?)");
                 }
 
-                if(structField.type().primitiveType() == null) {
+                if (structField.type().primitiveType() == null) {
                     throw new UnsupportedOperationException("Nested structs are not currently supported");
                 }
 
                 Params.add(new NameAndType(structField.ID().getText(), new PrimitiveStructOrArrayType(structField.type().pointer() == null ? PrimitiveType.getByKeyword(structField.type().primitiveType().getText()) : PrimitiveType.getByKeyword(structField.type().primitiveType().getText()).toPointer())));
-            } else if(varDeclarationContext instanceof UISCParser.ArrayAssignmentInitializationContext) {
+            } else if (varDeclarationContext instanceof UISCParser.ArrayAssignmentInitializationContext) {
                 UISCParser.ArrayAssignmentInitializationContext structField = (UISCParser.ArrayAssignmentInitializationContext) varDeclarationContext;
 
-                if(structField.expression() != null) {
+                if (structField.expression() != null) {
                     throw new UnsupportedOperationException("That is not allowed right now");
                 }
 
-                if(structField.type().primitiveType() == null) {
+                if (structField.type().primitiveType() == null) {
                     throw new UnsupportedOperationException("Nested structs are not currently supported");
                 }
 
@@ -1399,35 +1440,35 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitFunctionDeclaration(UISCParser.FunctionDeclarationContext ctx) {
-        System.out.println(">>Defined function " + ctx.type().getText() + " " + ctx.ID().getText() + " " + (ctx.formalParameters() == null ? "":ctx.formalParameters().toStringTree().replaceAll("\\[(.*?)\\]", "").replace("(", "").replace(")", "")));
+        System.out.println(">>Defined function " + ctx.type().getText() + " " + ctx.ID().getText() + " " + (ctx.formalParameters() == null ? "" : ctx.formalParameters().toStringTree().replaceAll("\\[(.*?)\\]", "").replace("(", "").replace(")", "")));
 
         PrimitiveType fxnType = PrimitiveType.getByKeyword(ctx.type().getText());
 
-        if(fxnType == null){
+        if (fxnType == null) {
             throw new UnsupportedOperationException("Struct functions are not yet supported.");
         }
 
-        if(ctx.block() == null) {
-            System.out.println("No code block was found for the function: "+ctx.ID().getText());
+        if (ctx.block() == null) {
+            System.out.println("No code block was found for the function: " + ctx.ID().getText());
             return "NO_BLOCK_SPECIFIED_IN_FUNCTION";
         }
 
-        if(ctx.ID().getText().equalsIgnoreCase("main")) {
+        if (ctx.ID().getText().equalsIgnoreCase("main")) {
             mainFunctionAsm = ASMUtil.generateComment("Main function declaration") + visit(ctx.block());
             return "";
         }
 
-        if(!fxnType.equals(PrimitiveType.Void)) {
+        if (!fxnType.equals(PrimitiveType.Void)) {
             Boolean doAllPathsReturn = ctx.block().accept(new ASMGenAllPathsReturnVisitor());
-            if(doAllPathsReturn == null || !doAllPathsReturn){
-                System.out.println("Not all paths return a value in a non void function! "+ctx.ID().getText());
+            if (doAllPathsReturn == null || !doAllPathsReturn) {
+                System.out.println("Not all paths return a value in a non void function! " + ctx.ID().getText());
                 return "NOT_ALL_PATHS_RETURN_NONVOID_FUNCTION";
             }
         }
 
         ArrayList<NameAndType> Parameters = new ArrayList<>();
 
-        if(ctx.formalParameters() != null) {
+        if (ctx.formalParameters() != null) {
             for (UISCParser.FormalParameterContext formalParameterContext : ctx.formalParameters().formalParameter()) {
                 Parameters.add(new NameAndType(formalParameterContext.ID().getText(), new PrimitiveStructOrArrayType(PrimitiveType.getByKeyword(formalParameterContext.type().getText()))));
             }
@@ -1435,7 +1476,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PushFunctionScope(fxnType, ctx.ID().getText(), Parameters);
 
-        if(ctx.formalParameters() != null) {
+        if (ctx.formalParameters() != null) {
             for (UISCParser.FormalParameterContext formalParameterContext : ctx.formalParameters().formalParameter()) {
                 getCurrentScope().declareSymbol(formalParameterContext.ID().getText(), PrimitiveType.getByKeyword(formalParameterContext.type().getText()));
             }
@@ -1447,6 +1488,6 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         PopLocalScope();
 
-        return ASMUtil.generateComment("Function declaration "+ctx.ID().getText()) + "push { " + functionCode + "} "+ ASMUtil.generateStoreAddress(FunctionAddress);//push [" + FunctionAddress + "] put";
+        return ASMUtil.generateComment("Function declaration " + ctx.ID().getText()) + "push { " + functionCode + "} " + ASMUtil.generateStoreAddress(FunctionAddress);//push [" + FunctionAddress + "] put";
     }
 }

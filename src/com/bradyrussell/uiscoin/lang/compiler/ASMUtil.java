@@ -2,6 +2,8 @@
 package com.bradyrussell.uiscoin.lang.compiler;
 
 import com.bradyrussell.uiscoin.BytesUtil;
+import com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem;
+import com.bradyrussell.uiscoin.lang.compiler.filesystem.StandardCompilerFileSystem;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
 import com.bradyrussell.uiscoin.lang.generated.UISCLexer;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
@@ -16,6 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class ASMUtil {
     public static boolean bNoComments = true;
+    public static CompilerFileSystem defaultFileSystem = null;
 
     public static String generateComment(String Comment){
         return bNoComments ? "" : "\n/* "+Comment+" */\n";
@@ -128,14 +131,52 @@ public class ASMUtil {
                 .replace("convert32to64 convert64to32","");
     }
 
-    public static String compileHLLToASM(String HLL) {
-        //ASMUtil.bNoComments = true;
+    public static String resolveIncludes(String HLL, CompilerFileSystem fileSystem) {
+        return resolveIncludes(HLL, fileSystem, 32);
+    }
+
+    public static String resolveIncludes(String HLL, CompilerFileSystem fileSystem, int maximumDepth) {
+        String resolved = HLL;
+        for (int i = 0; i < maximumDepth; i++) {
+            String nextResolved = resolveIncludesStep(resolved, fileSystem);
+            if(nextResolved.equals(resolved)) break;
+            resolved = nextResolved;
+        }
+        return resolved;
+    }
+
+    private static String resolveIncludesStep(String HLL, CompilerFileSystem fileSystem) {
+        ASMUtil.bNoComments = true;
+
+        if(!HLL.endsWith("\n")) HLL = HLL+"\n";
 
         @SuppressWarnings("deprecation") UISCLexer lexer = new UISCLexer(new ANTLRInputStream(HLL));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        UISCParser parser = new UISCParser(tokens);
+        ParseTree tree = parser.file();
+
+        ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
+        IncludeStatementListener includeStatementListener = new IncludeStatementListener(tokens, fileSystem);
+        parseTreeWalker.walk(includeStatementListener, tree);
+        return includeStatementListener.getText();
+    }
+
+    public static String compileHLLToASM(String HLL) {
+        return compileHLLToASM(HLL, defaultFileSystem);
+    }
+
+    public static String compileHLLToASM(String HLL, CompilerFileSystem fileSystem) {
+        //ASMUtil.bNoComments = true;
+
+        String resolvedHLL = ASMUtil.resolveIncludes(HLL, fileSystem);
+
+        System.out.println("Pre-compile HLL:\n"+resolvedHLL);
+
+        @SuppressWarnings("deprecation") UISCLexer lexer = new UISCLexer(new ANTLRInputStream(resolvedHLL));
         UISCParser parser = new UISCParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.file();
 
-        ASMGenerationVisitor asmGenerationVisitor = new ASMGenerationVisitor();
+        ASMGenerationVisitor asmGenerationVisitor = new ASMGenerationVisitor(fileSystem);
         String asm = asmGenerationVisitor.visit(tree);
 
         String mainFunctionAsm = asmGenerationVisitor.getMainFunctionAsm();
