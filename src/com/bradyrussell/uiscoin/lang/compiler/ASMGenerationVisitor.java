@@ -15,6 +15,7 @@ import com.bradyrussell.uiscoin.lang.generated.UISCBaseVisitor;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 
 import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     HashMap<String, Integer> nativeFunctionCallParameters = new HashMap<>();
@@ -1029,6 +1030,30 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             }
 
             return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+        }
+
+        if(ctx.type().inferredType() != null) {
+            ParseTree lhs = ctx.getParent().getChild(0);
+            if(lhs instanceof UISCParser.TypeContext) {
+                UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
+                if(lhsType.inferredType() != null) {
+                    throw new UnsupportedOperationException("You can't infer a cast to an inferred type...!");
+                }
+                PrimitiveType primitiveType = PrimitiveType.getByKeyword(lhsType.primitiveType().getText());
+                if(primitiveType == null) {
+                    throw new UnsupportedOperationException("Autocasting to structs is not yet supported");
+                }
+                String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                if (castAssembly == null) {
+                    System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                    return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                }
+
+                return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+            } else {
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented!");
+            }
         }
 
         throw new UnsupportedOperationException("Cannot cast to type: " + ctx.type().getText());

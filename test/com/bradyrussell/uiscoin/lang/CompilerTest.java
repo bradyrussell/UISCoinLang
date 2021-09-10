@@ -28,6 +28,16 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_TypeInferredCast() {
+        String Script =
+                        "int64 x = (auto)true;\n" +
+                        "//int32 y(byte a) { return a; }\n" +
+                        "//auto b = y((auto)true);\n"; // todo function param autocast
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_Main() {
         String Script =
                 "void main[](void in[]) {\n" +

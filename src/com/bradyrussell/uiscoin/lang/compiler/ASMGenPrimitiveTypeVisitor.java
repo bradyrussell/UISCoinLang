@@ -12,6 +12,7 @@ import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
 import com.bradyrussell.uiscoin.lang.compiler.type.TypedValue;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
 public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveType> {
@@ -219,6 +220,22 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
 
     @Override
     public PrimitiveType visitCastExpression(UISCParser.CastExpressionContext ctx) {
+        if(ctx.type().inferredType() != null) {
+            ParseTree lhs = ctx.getParent().getChild(0);
+            if(lhs instanceof UISCParser.TypeContext) {
+                UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
+                if(lhsType.inferredType() != null) {
+                    throw new UnsupportedOperationException("You can't infer a cast to an inferred type...!");
+                }
+                PrimitiveType primitiveType = PrimitiveType.getByKeyword(lhsType.primitiveType().getText());
+                if(primitiveType == null) {
+                    throw new UnsupportedOperationException("Autocasting to structs is not yet supported");
+                }
+                return ctx.type().pointer() == null ? primitiveType : primitiveType.toPointer();
+            } else {
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented!");
+            }
+        }
         PrimitiveType primitiveType = PrimitiveType.getByKeyword(ctx.type().primitiveType().getText());
         if(primitiveType == null) {
             throw new UnsupportedOperationException("Casting to structs is not yet supported");
