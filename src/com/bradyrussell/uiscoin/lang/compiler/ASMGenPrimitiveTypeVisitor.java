@@ -126,6 +126,12 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
             case "instruction" -> {
                 return PrimitiveType.Int32;
             }
+            case "isnan", "isinf", "isfin" -> {
+                return PrimitiveType.Byte;
+            }
+            case "log", "logn", "pow", "root", "fabs", "sin", "cos", "tan", "asin", "acos", "atan", "floor", "ceil", "round" -> {
+                return PrimitiveType.Float;
+            }
         }
         throw new UnsupportedOperationException("Type not defined for native: "+ctx.getText());
     }

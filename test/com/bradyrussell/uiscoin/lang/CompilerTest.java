@@ -38,6 +38,18 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_TypeInferredCastReturnedValue() {
+        String Script =
+                "int64 y = 100;\n" +
+                        "int32 x(int64 y) {\n" +
+                        "return (int32)y * -2;\n" +
+                        "}\n" +
+                        "byte z = (auto)x(y);";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_Main() {
         String Script =
                 "void main[](void in[]) {\n" +
@@ -337,6 +349,32 @@ public class CompilerTest {
                         "_copy($m, (int32)0, $k, (int32)0, (int32)2);\n";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [72, 101, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121] [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33]");
+    }
+
+    @Test
+    public void Test_MathNatives() {
+        String Script =
+                                "float x = 42.6;\n" +
+                                "float y = (auto)-2;\n" +
+                                "float fabs = _fabs(y);\n" +
+                                "float log = _log(x);\n" +
+                                "float logn = _logn(x, y);\n" +
+                                "float sin = _sin(x);\n" +
+                                "float cos = _cos(x);\n" +
+                                "float tan = _tan(x);\n" +
+                                "float asin = _asin(x);\n" +
+                                "float acos = _acos(x);\n" +
+                                "float atan = _atan(x);\n" +
+                                "float pow = _pow(x, y);\n" +
+                                "float root = _root(x, y);\n" +
+                                "float floor = _floor(x);\n" +
+                                "float ceil = _ceil(x);\n" +
+                                "float round = _round(x);\n" +
+                                "byte isnan = _isnan(x);\n" +
+                                "byte isinf = _isinf(x);\n" +
+                                "byte isfin = _isfin(x);\n";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[66, 42, 102, 102] [-64, 0, 0, 0] [64, 0, 0, 0] [64, 112, 30, 97] [127, -64, 0, 0] [-65, 123, 119, 39] [62, 63, -31, 109] [-64, -89, -65, 123] [127, -64, 0, 0] [127, -64, 0, 0] [63, -58, 14, -53] [58, 16, 115, 121] [62, 28, -29, -43] [66, 40, 0, 0] [66, 44, 0, 0] [66, 44, 0, 0] [0] [0] [1]");
     }
 
     @Test

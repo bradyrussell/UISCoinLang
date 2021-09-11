@@ -92,6 +92,24 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         nativeFunctionCallParameters.put("unzip", 1);
         nativeFunctionCallParameters.put("sha512", 1);
         nativeFunctionCallParameters.put("instruction", 0);
+        nativeFunctionCallParameters.put("log", 1);
+        nativeFunctionCallParameters.put("logn", 2);
+        nativeFunctionCallParameters.put("isinf", 1);
+        nativeFunctionCallParameters.put("isnan", 1);
+        nativeFunctionCallParameters.put("isfin", 1);
+        nativeFunctionCallParameters.put("pow", 2);
+        nativeFunctionCallParameters.put("root", 2);
+        nativeFunctionCallParameters.put("abs", 1);
+        nativeFunctionCallParameters.put("fabs", 1);
+        nativeFunctionCallParameters.put("sin", 1);
+        nativeFunctionCallParameters.put("cos", 1);
+        nativeFunctionCallParameters.put("tan", 1);
+        nativeFunctionCallParameters.put("asin", 1);
+        nativeFunctionCallParameters.put("acos", 1);
+        nativeFunctionCallParameters.put("atan", 1);
+        nativeFunctionCallParameters.put("floor", 1);
+        nativeFunctionCallParameters.put("ceil", 1);
+        nativeFunctionCallParameters.put("round", 1);
     }
 
     private String getNextLabel() {
@@ -1319,6 +1337,60 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             }
             case "set" -> {
                 return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + " set";
+            }
+            case "isinf" -> {
+                return visit(ctx.exprList().expression(0)) + " isinf";
+            }
+            case "isfin" -> {
+                return visit(ctx.exprList().expression(0)) + " isfin";
+            }
+            case "isnan" -> {
+                return visit(ctx.exprList().expression(0)) + " isnan";
+            }
+            case "log" -> {
+                return visit(ctx.exprList().expression(0)) + " log";
+            }
+            case "logn" -> {
+                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " logn";
+            }
+            case "pow" -> {
+                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " exponent";
+            }
+            case "root" -> {
+                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " root";
+            }
+            case "abs" -> {
+                return visit(ctx.exprList().expression(0)) + " abs";
+            }
+            case "fabs" -> {
+                return visit(ctx.exprList().expression(0)) + " fabs";
+            }
+            case "sin" -> {
+                return visit(ctx.exprList().expression(0)) + " sin";
+            }
+            case "cos" -> {
+                return visit(ctx.exprList().expression(0)) + " cos";
+            }
+            case "tan" -> {
+                return visit(ctx.exprList().expression(0)) + " tan";
+            }
+            case "asin" -> {
+                return visit(ctx.exprList().expression(0)) + " asin";
+            }
+            case "acos" -> {
+                return visit(ctx.exprList().expression(0)) + " acos";
+            }
+            case "atan" -> {
+                return visit(ctx.exprList().expression(0)) + " atan";
+            }
+            case "floor" -> {
+                return visit(ctx.exprList().expression(0)) + " floor";
+            }
+            case "ceil" -> {
+                return visit(ctx.exprList().expression(0)) + " ceil";
+            }
+            case "round" -> {
+                return visit(ctx.exprList().expression(0)) + " round";
             }
         }
         throw new UnsupportedOperationException("No implementation for native call: " + ctx.ID().getText());
