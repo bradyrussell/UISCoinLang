@@ -1,10 +1,7 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.compiler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import com.bradyrussell.uiscoin.BytesUtil;
 import com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem;
@@ -13,12 +10,13 @@ import com.bradyrussell.uiscoin.lang.compiler.symbol.*;
 import com.bradyrussell.uiscoin.lang.compiler.type.*;
 import com.bradyrussell.uiscoin.lang.generated.UISCBaseVisitor;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
+import com.bradyrussell.uiscoin.script.ScriptOperator;
 
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
-    HashMap<String, Integer> nativeFunctionCallParameters = new HashMap<>();
+    HashMap<String, List<PrimitiveType>> nativeFunctionCallParameters = new HashMap<>();
 
     ////////////////////////
 
@@ -81,35 +79,35 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     public ASMGenerationVisitor(CompilerFileSystem fileSystem) {
         this.fileSystem = fileSystem;
-        nativeFunctionCallParameters.put("set", 4); // location, position, length, value
-        nativeFunctionCallParameters.put("get", 3); // location, position, length
-        nativeFunctionCallParameters.put("copy", 5); // sourceLocation, sourcePosition, destinationLocation, destinationPosition, length
-        nativeFunctionCallParameters.put("encrypt", 2);
-        nativeFunctionCallParameters.put("decrypt", 2);
-        nativeFunctionCallParameters.put("verifySig", 2);
-        nativeFunctionCallParameters.put("alloc", 2); // location, size
-        nativeFunctionCallParameters.put("zip", 1);
-        nativeFunctionCallParameters.put("unzip", 1);
-        nativeFunctionCallParameters.put("sha512", 1);
-        nativeFunctionCallParameters.put("instruction", 0);
-        nativeFunctionCallParameters.put("log", 1);
-        nativeFunctionCallParameters.put("logn", 2);
-        nativeFunctionCallParameters.put("isinf", 1);
-        nativeFunctionCallParameters.put("isnan", 1);
-        nativeFunctionCallParameters.put("isfin", 1);
-        nativeFunctionCallParameters.put("pow", 2);
-        nativeFunctionCallParameters.put("root", 2);
-        nativeFunctionCallParameters.put("abs", 1);
-        nativeFunctionCallParameters.put("fabs", 1);
-        nativeFunctionCallParameters.put("sin", 1);
-        nativeFunctionCallParameters.put("cos", 1);
-        nativeFunctionCallParameters.put("tan", 1);
-        nativeFunctionCallParameters.put("asin", 1);
-        nativeFunctionCallParameters.put("acos", 1);
-        nativeFunctionCallParameters.put("atan", 1);
-        nativeFunctionCallParameters.put("floor", 1);
-        nativeFunctionCallParameters.put("ceil", 1);
-        nativeFunctionCallParameters.put("round", 1);
+        nativeFunctionCallParameters.put("set", List.of(PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32)); // location, position, length, value
+        nativeFunctionCallParameters.put("get", List.of(PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32)); // location, position, length
+        nativeFunctionCallParameters.put("copy", List.of(PrimitiveType.VoidPointer, PrimitiveType.Int32, PrimitiveType.VoidPointer, PrimitiveType.Int32, PrimitiveType.Int32)); // sourceLocation, sourcePosition, destinationLocation, destinationPosition, length
+        nativeFunctionCallParameters.put("encrypt", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("decrypt", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("verifySig", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("alloc", List.of(PrimitiveType.Int32, PrimitiveType.Int32)); // location, size
+        nativeFunctionCallParameters.put("zip", List.of(PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("unzip", List.of(PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("sha512", List.of(PrimitiveType.ByteArray));
+        nativeFunctionCallParameters.put("instruction", List.of());
+        nativeFunctionCallParameters.put("log", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("logn", List.of(PrimitiveType.Float, PrimitiveType.Float));
+        nativeFunctionCallParameters.put("isinf", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("isnan", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("isfin", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("pow", List.of(PrimitiveType.Float, PrimitiveType.Float));
+        nativeFunctionCallParameters.put("root", List.of(PrimitiveType.Float, PrimitiveType.Float));
+        nativeFunctionCallParameters.put("abs", List.of(PrimitiveType.Int64));
+        nativeFunctionCallParameters.put("fabs", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("sin", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("cos", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("tan", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("asin", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("acos", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("atan", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("floor", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("ceil", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("round", List.of(PrimitiveType.Float));
     }
 
     private String getNextLabel() {
@@ -1291,109 +1289,39 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return " push " + symbol.address + symbol.struct.generateFieldGetterASM(ctx.structField().fieldname.getText());
     }
 
+    private static final Map<String, String> nativeToOp = Map.of("encrypt", "encryptaes", "decrypt", "decryptaes", "pow", "exponent", "verifySig", "verifysig verify");
+
     @Override
     public String visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) {
         if (!nativeFunctionCallParameters.containsKey(ctx.ID().getText()))
             throw new UnsupportedOperationException("Unknown native call: " + ctx.ID().getText());
-        int ParamsExpected = nativeFunctionCallParameters.get(ctx.ID().getText());
+        List<PrimitiveType> ParamsExpected = nativeFunctionCallParameters.get(ctx.ID().getText());
 
-        if (ParamsExpected != 0 && ctx.exprList().expression() == null) {
+        if (ParamsExpected.size() != 0 && ctx.exprList().expression() == null) {
             return "NATIVE_CALL_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected + "_PARAMETERS_FOUND_0";
         }
 
-        if (((ctx.exprList() == null && ParamsExpected > 0)) || ctx.exprList() != null && ctx.exprList().expression().size() != ParamsExpected) {
+        if (((ctx.exprList() == null && ParamsExpected.size() > 0)) || ctx.exprList() != null && ctx.exprList().expression().size() != ParamsExpected.size()) {
             return "NATIVE_CALL_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected + "_PARAMETERS_FOUND_" + ctx.exprList().expression().size();
         }
 
-        switch (ctx.ID().getText()) {
-            case "encrypt" -> {
-                //push key //push message //encryptaes
-                return visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(0)) + " encryptaes";
-            }
-            case "decrypt" -> {
-                //push key //push message //decryptaes
-                return visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(0)) + " decryptaes";
-            }
-            case "zip" -> {
-                return visit(ctx.exprList().expression(0)) + " zip";
-            }
-            case "unzip" -> {
-                return visit(ctx.exprList().expression(0)) + " unzip";
-            }
-            case "sha512" -> {
-                return visit(ctx.exprList().expression(0)) + " sha512";
-            }
-            case "verifySig" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " verifysig verify";
-            }
-            case "instruction" -> {
-                return " instruction";
-            }
-            case "copy" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + visit(ctx.exprList().expression(3)) + " " + visit(ctx.exprList().expression(4)) + " copy";
-            }
-            case "get" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + visit(ctx.exprList().expression(3)) + " get";
-            }
-            case "set" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " " + visit(ctx.exprList().expression(2)) + " " + " set";
-            }
-            case "isinf" -> {
-                return visit(ctx.exprList().expression(0)) + " isinf";
-            }
-            case "isfin" -> {
-                return visit(ctx.exprList().expression(0)) + " isfin";
-            }
-            case "isnan" -> {
-                return visit(ctx.exprList().expression(0)) + " isnan";
-            }
-            case "log" -> {
-                return visit(ctx.exprList().expression(0)) + " log";
-            }
-            case "logn" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " logn";
-            }
-            case "pow" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " exponent";
-            }
-            case "root" -> {
-                return visit(ctx.exprList().expression(0)) + " " + visit(ctx.exprList().expression(1)) + " root";
-            }
-            case "abs" -> {
-                return visit(ctx.exprList().expression(0)) + " abs";
-            }
-            case "fabs" -> {
-                return visit(ctx.exprList().expression(0)) + " fabs";
-            }
-            case "sin" -> {
-                return visit(ctx.exprList().expression(0)) + " sin";
-            }
-            case "cos" -> {
-                return visit(ctx.exprList().expression(0)) + " cos";
-            }
-            case "tan" -> {
-                return visit(ctx.exprList().expression(0)) + " tan";
-            }
-            case "asin" -> {
-                return visit(ctx.exprList().expression(0)) + " asin";
-            }
-            case "acos" -> {
-                return visit(ctx.exprList().expression(0)) + " acos";
-            }
-            case "atan" -> {
-                return visit(ctx.exprList().expression(0)) + " atan";
-            }
-            case "floor" -> {
-                return visit(ctx.exprList().expression(0)) + " floor";
-            }
-            case "ceil" -> {
-                return visit(ctx.exprList().expression(0)) + " ceil";
-            }
-            case "round" -> {
-                return visit(ctx.exprList().expression(0)) + " round";
+        StringBuilder sb = new StringBuilder();
+
+        List<UISCParser.ExpressionContext> expression = ctx.exprList().expression();
+        for (int i = 0; i < expression.size(); i++) {
+            PrimitiveType providedType = expression.get(i).accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+            if (providedType.widensTo(ParamsExpected.get(i))) {
+                // push param
+                sb.append(ASMUtil.generateComment("Native parameter " + i + ParamsExpected.get(i).name()));
+                // auto widen
+                sb.append(visit(expression.get(i))).append(" ").append(ASMUtil.generateCastAssembly(providedType, ParamsExpected.get(i)));
+            } else {
+                System.out.println("Native " + ctx.ID().getText() + " expects " + ParamsExpected.get(i) + " for parameter " + i + " but " + providedType + " was provided.");
+                return "NATIVE_INCORRECT_TYPE_PARAMETERS_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected.get(i) + "_FOUND_" + providedType;
             }
         }
-        throw new UnsupportedOperationException("No implementation for native call: " + ctx.ID().getText());
+
+        return sb.append(" ").append(nativeToOp.containsKey(ctx.ID().getText()) ? nativeToOp.get(ctx.ID().getText()) : ctx.ID().getText()).toString();
     }
 
     @Override

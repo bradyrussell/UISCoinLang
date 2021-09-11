@@ -209,7 +209,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
             if(symbol.type == null) {
                 throw new UnsupportedOperationException("Unable to determine pointer type;");
             } else {
-                return  symbol.type.toPointer();
+                return symbol.type.isArray() ? PrimitiveType.VoidPointer : symbol.type.toPointer();
             }
         }
     }
