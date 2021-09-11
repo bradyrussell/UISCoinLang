@@ -1,6 +1,9 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.compiler;
 
+import java.util.List;
+
+import com.bradyrussell.uiscoin.lang.compiler.exception.CompilerErrorException;
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeBase;
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeGlobal;
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeLocal;
@@ -125,7 +128,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
             case "verifySig","copy","set" -> {
                 return PrimitiveType.Void;
             }
-            case "instruction" -> {
+            case "instruction", "len", "sizeof" -> {
                 return PrimitiveType.Int32;
             }
             case "isnan", "isinf", "isfin" -> {
@@ -229,8 +232,18 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
     @Override
     public PrimitiveType visitCastExpression(UISCParser.CastExpressionContext ctx) {
         if(ctx.type().inferredType() != null) {
-            if(ctx.getParent() instanceof UISCParser.AssignmentStatementContext) {
-                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) ctx.getParent();
+            ParserRuleContext parent = ctx.getParent();
+
+            while(parent instanceof UISCParser.ParenExpressionContext) {
+                parent = parent.getParent();
+            }
+
+            if(parent instanceof UISCParser.CastExpressionContext) {
+                return visit(parent);
+            }
+
+            if(parent instanceof UISCParser.AssignmentStatementContext) {
+                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) parent;
                 if(assignmentStatementContext.lhs != null) {
                     ScopeBase scopeContaining = getCurrentScope().findScopeContaining(assignmentStatementContext.lhs.getText());
 
@@ -253,18 +266,63 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                 }
             }
 
-            if(ctx.getParent() instanceof UISCParser.ExprListContext) {
-                // native
+            if(parent instanceof UISCParser.ExprListContext) {
+                UISCParser.ExprListContext exprListContext = (UISCParser.ExprListContext) parent;
+                List<UISCParser.ExpressionContext> expression = exprListContext.expression();
+                int exprListIndex = -1;
+                for (int i = 0; i < expression.size(); i++) {
+                    if(expression.get(i).equals(ctx)) {
+                        exprListIndex = i;
+                        break;
+                    }
+                }
 
+                if(exprListIndex < 0 || exprListIndex >= exprListContext.expression().size()) {
+                    throw new UnsupportedOperationException("Failed to find expression in exprList!");
+                }
+
+                List<Class<? extends ParserRuleContext>> parents = List.of(
+                        UISCParser.NativeCallExpressionContext.class,
+                        UISCParser.CatchStatementContext.class,
+                        UISCParser.ExceptionContext.class,
+                        UISCParser.FunctionCallExpressionContext.class,
+                        UISCParser.ArrayValueInitializationContext.class);
+
+                ParserRuleContext context = parent;
+                do {
+                    context = context.getParent();
+                } while (!(parents.contains(context.getClass())));
+
+                if(context instanceof UISCParser.FunctionCallExpressionContext) {
+                    UISCParser.FunctionCallExpressionContext functionCallExpressionContext = (UISCParser.FunctionCallExpressionContext) context;
+                    String functionId = functionCallExpressionContext.ID().getText();
+                    ScopeBase scopeContaining = getCurrentScope().findScopeContaining(functionId);
+                    if(scopeContaining != null) {
+                        Object symbol = scopeContaining.getSymbol(functionId);
+                        if(symbol instanceof ScopeWithSymbol) {
+                            ScopeWithSymbol scopeWithSymbol = (ScopeWithSymbol) symbol;
+                            return scopeWithSymbol.Symbol.getTypeOfParameter(exprListIndex);
+                        }
+                    }
+                }
+
+                if(context instanceof UISCParser.ArrayValueInitializationContext) {
+                    UISCParser.ArrayValueInitializationContext arrayValueInitializationContext = (UISCParser.ArrayValueInitializationContext) context;
+                    if(arrayValueInitializationContext.type().inferredType() != null) {
+                        throw new UnsupportedOperationException("Cannot infer a cast to an inferred array type!");
+                    }
+                    return PrimitiveType.getByKeyword(arrayValueInitializationContext.type().primitiveType().getText());
+                }
+
+                throw new UnsupportedOperationException("Auto cast in expression "+context.getClass().toString());
+                    // native
                     // throw
                     // catch
-
-                    // function
                     // array initializer
             }
 
-            if(ctx.getParent() instanceof UISCParser.ReturnStatementContext) {
-                ParserRuleContext context = ctx.getParent();
+            if(parent instanceof UISCParser.ReturnStatementContext) {
+                ParserRuleContext context = parent;
                 do {
                   context = context.getParent();
                 } while (!(context instanceof UISCParser.FunctionDeclarationContext));
@@ -277,7 +335,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                 }
             }
 
-            ParseTree lhs = ctx.getParent().getChild(0);
+            ParseTree lhs = parent.getChild(0);
             if(lhs instanceof UISCParser.TypeContext) {
                 UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
                 if(lhsType.inferredType() != null) {
@@ -289,7 +347,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                 }
                 return ctx.type().pointer() == null ? primitiveType : primitiveType.toPointer();
             } else {
-                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ctx.getParent().getClass().toString()+" -> " + lhs.getClass().toString());
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ parent.getClass().toString()+" -> " + lhs.getClass().toString());
             }
         }
         PrimitiveType primitiveType = PrimitiveType.getByKeyword(ctx.type().primitiveType().getText());

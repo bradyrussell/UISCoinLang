@@ -82,7 +82,7 @@ public enum PrimitiveType {
     }
 
     public boolean widensTo(PrimitiveType WideType){
-        if(this.equals(PrimitiveType.Void) || this.equals(WideType)) return true;
+        if(this.equals(PrimitiveType.Void) || this.equals(WideType) || PrimitiveType.Void.equals(WideType)) return true;
         if(WideType.isPointer() || WideType.isArray()) return this.equals(WideType);
         if(!(this.equals(PrimitiveType.Byte) || this.equals(PrimitiveType.Int32))) return false;
         return this.SizeOf <= WideType.SizeOf;

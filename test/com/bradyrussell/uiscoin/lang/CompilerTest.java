@@ -32,12 +32,14 @@ public class CompilerTest {
         String Script =
                                 "int64 x = 600;\n" +
                                 "x = (auto)3.14159265;\n" +
-                                "//x = (auto)((auto)(auto)((auto)true));\n" +
+                                "x = (auto)(((auto)true));\n" +
                                 "int32 z(byte g) {\n" +
                                 "\treturn (auto)g;\n" +
                                 "}\n" +
-                                "//auto y = z((auto)x);\n" +
-                                "//float a = (auto)z((auto)(y));\n";
+                                "auto y = z((auto)x);\n" +
+                                "byte r[] = {(auto)y};\n" +
+                                "auto s[] = {500, 600, 700};\n" +
+                                "float a = (auto)z((auto)(y));\n";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), null);
     }
@@ -344,16 +346,18 @@ public class CompilerTest {
     @Test
     public void Test_Natives() { // todo fix void casts
         String Script =
-                "byte m[] = \"Hello world!\";\n" +
+                        "byte m[] = \"Hello world!\";\n" +
                         "byte k[] = \"encryptionKey\";\n" +
                         "void o = (void)_encrypt(m, k);\n" +
                         "asm(\"/* my asm comment */\");\n" +
                         "o = (void)_decrypt(_encrypt(m, k), k);\n" +
                         "o = (void)_zip(_decrypt(_encrypt(m, k), k));\n" +
                         "o = (void)_unzip(_zip(_decrypt(_encrypt(m, k), k)));\n" +
-                        "_copy($m, (int32)0, $k, (int32)0, (int32)2);\n";
+                        "_copy($m, (int32)0, $k, (int32)0, (int32)2);\n"+
+                        "int32 len = _len(o);\n"+
+                        "int32 sizeof = _sizeof(len);";
 
-        performStandardTests(ASMUtil.compileHLLToASM(Script), "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [72, 101, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121] [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33]");
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [72, 101, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121] [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [0, 0, 0, 12] [0, 0, 0, 4]");
     }
 
     @Test

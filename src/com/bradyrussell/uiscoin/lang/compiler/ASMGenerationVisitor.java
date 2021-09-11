@@ -109,6 +109,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         nativeFunctionCallParameters.put("floor", List.of(PrimitiveType.Float));
         nativeFunctionCallParameters.put("ceil", List.of(PrimitiveType.Float));
         nativeFunctionCallParameters.put("round", List.of(PrimitiveType.Float));
+        nativeFunctionCallParameters.put("len", List.of(PrimitiveType.Void));
+        nativeFunctionCallParameters.put("sizeof", List.of(PrimitiveType.Void));
     }
 
     private String getNextLabel() {
@@ -1050,8 +1052,25 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
 
         if(ctx.type().inferredType() != null) {
-            if(ctx.getParent() instanceof UISCParser.AssignmentStatementContext) {
-                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) ctx.getParent();
+            ParserRuleContext parent = ctx.getParent();
+
+            while(parent instanceof UISCParser.ParenExpressionContext) {
+                parent = parent.getParent();
+            }
+
+            if(parent instanceof UISCParser.CastExpressionContext) {
+                PrimitiveType primitiveType = parent.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+                String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                if (castAssembly == null) {
+                    System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                    return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                }
+                return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+            }
+
+            if(parent instanceof UISCParser.AssignmentStatementContext) {
+                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) parent;
                 if(assignmentStatementContext.lhs != null) {
                     ScopeBase scopeContaining = getCurrentScope().findScopeContaining(assignmentStatementContext.lhs.getText());
 
@@ -1081,8 +1100,8 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 }
             }
 
-            if(ctx.getParent() instanceof UISCParser.ReturnStatementContext) {
-                ParserRuleContext context = ctx.getParent();
+            if(parent instanceof UISCParser.ReturnStatementContext) {
+                ParserRuleContext context = parent;
                 do {
                     context = context.getParent();
                 } while (!(context instanceof UISCParser.FunctionDeclarationContext));
@@ -1102,7 +1121,76 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 }
             }
 
-            ParseTree lhs = ctx.getParent().getChild(0);
+            if(parent instanceof UISCParser.ExprListContext) {
+                UISCParser.ExprListContext exprListContext = (UISCParser.ExprListContext) parent;
+                List<UISCParser.ExpressionContext> expression = exprListContext.expression();
+                int exprListIndex = -1;
+                for (int i = 0; i < expression.size(); i++) {
+                    if(expression.get(i).equals(ctx)) {
+                        exprListIndex = i;
+                        break;
+                    }
+                }
+
+                if(exprListIndex < 0 || exprListIndex >= exprListContext.expression().size()) {
+                    throw new UnsupportedOperationException("Failed to find expression in exprList!");
+                }
+
+                List<Class<? extends ParserRuleContext>> parents = List.of(
+                        UISCParser.NativeCallExpressionContext.class,
+                        UISCParser.CatchStatementContext.class,
+                        UISCParser.ExceptionContext.class,
+                        UISCParser.FunctionCallExpressionContext.class,
+                        UISCParser.ArrayValueInitializationContext.class);
+
+                ParserRuleContext context = parent;
+                do {
+                    context = context.getParent();
+                } while (!(parents.contains(context.getClass())));
+
+                if(context instanceof UISCParser.FunctionCallExpressionContext) {
+                    UISCParser.FunctionCallExpressionContext functionCallExpressionContext = (UISCParser.FunctionCallExpressionContext) context;
+                    String functionId = functionCallExpressionContext.ID().getText();
+                    ScopeBase scopeContaining = getCurrentScope().findScopeContaining(functionId);
+                    if(scopeContaining != null) {
+                        Object symbol = scopeContaining.getSymbol(functionId);
+                        if(symbol instanceof ScopeWithSymbol) {
+                            ScopeWithSymbol scopeWithSymbol = (ScopeWithSymbol) symbol;
+                            PrimitiveType primitiveType = scopeWithSymbol.Symbol.getTypeOfParameter(exprListIndex);
+                            String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                            if (castAssembly == null) {
+                                System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                                return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                            }
+                            return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+                        }
+                    }
+                }
+
+                if(context instanceof UISCParser.ArrayValueInitializationContext) {
+                    UISCParser.ArrayValueInitializationContext arrayValueInitializationContext = (UISCParser.ArrayValueInitializationContext) context;
+                    if(arrayValueInitializationContext.type().inferredType() != null) {
+                        throw new UnsupportedOperationException("Cannot infer a cast to an inferred array type!");
+                    }
+                    PrimitiveType primitiveType = PrimitiveType.getByKeyword(arrayValueInitializationContext.type().primitiveType().getText());
+                    String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                    if (castAssembly == null) {
+                        System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                        return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                    }
+                    return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+                }
+
+                throw new UnsupportedOperationException("Auto cast in expression "+context.getClass().toString());
+                // native
+                // throw
+                // catch
+                // array initializer
+            }
+
+            ParseTree lhs = parent.getChild(0);
             if(lhs instanceof UISCParser.TypeContext) {
                 UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
                 if(lhsType.inferredType() != null) {
@@ -1121,7 +1209,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
                 return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
             } else {
-                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ctx.getParent().getClass().toString()+" -> " + lhs.getClass().toString());
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ parent.getClass().toString()+" -> " + lhs.getClass().toString());
             }
         }
 
@@ -1342,7 +1430,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return " push " + symbol.address + symbol.struct.generateFieldGetterASM(ctx.structField().fieldname.getText());
     }
 
-    private static final Map<String, String> nativeToOp = Map.of("encrypt", "encryptaes", "decrypt", "decryptaes", "pow", "exponent", "verifySig", "verifysig verify");
+    private static final Map<String, String> nativeToOp = Map.of("encrypt", "encryptaes", "decrypt", "decryptaes", "pow", "exponent", "verifySig", "verifysig verify", "len", "len swap drop");
 
     @Override
     public String visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) {
@@ -1363,6 +1451,11 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         List<UISCParser.ExpressionContext> expression = ctx.exprList().expression();
         for (int i = 0; i < expression.size(); i++) {
             PrimitiveType providedType = expression.get(i).accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+
+            if(ctx.ID().getText().equalsIgnoreCase("sizeof")) {
+                return " push "+providedType.getSize();
+            }
+
             if (providedType.widensTo(ParamsExpected.get(i))) {
                 // push param
                 sb.append(ASMUtil.generateComment("Native parameter " + i + ParamsExpected.get(i).name()));
@@ -1446,10 +1539,15 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
 
         PrimitiveType arrayType = ctx.arrayInitializer().accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
-        PrimitiveType expectedType = PrimitiveType.getByKeyword(ctx.type().getText());
-        if (arrayType == null || (!arrayType.equals(expectedType) && !arrayType.widensTo(expectedType))) {
-            System.out.println("Array " + ctx.ID().getText() + " was not properly initialized: type mismatch expected " + expectedType + " found " + arrayType);
-            return "ARRAY_INITIALIZER_TYPE_MISMATCH_" + ctx.ID().getText();
+        PrimitiveType expectedType;
+        if(ctx.type().primitiveType() != null) {
+            expectedType = PrimitiveType.getByKeyword(ctx.type().getText());
+            if (arrayType == null || (!arrayType.equals(expectedType) && !arrayType.widensTo(expectedType))) {
+                System.out.println("Array " + ctx.ID().getText() + " was not properly initialized: type mismatch expected " + expectedType + " found " + arrayType);
+                return "ARRAY_INITIALIZER_TYPE_MISMATCH_" + ctx.ID().getText();
+            }
+        } else {
+            expectedType = arrayType;
         }
 
         System.out.println("Warning: ArrayValueInitialization assumes each array initializer expression pushes exactly one value onto the stack.");
@@ -1468,7 +1566,13 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
         UISCParser.ArrayValueInitializationContext parent = (UISCParser.ArrayValueInitializationContext) ctx.getParent();
 
-        PrimitiveType castToType = PrimitiveType.getByKeyword(parent.type().getText());
+        PrimitiveType castToType;
+        if(parent.type().primitiveType() != null) {
+            castToType = PrimitiveType.getByKeyword(parent.type().getText());
+        } else {
+            castToType = ctx.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+        }
+
         StringBuilder arrayInitializerAsm = new StringBuilder();
 
         for (UISCParser.ExpressionContext expressionContext : ctx.exprList().expression()) {
