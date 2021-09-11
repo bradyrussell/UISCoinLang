@@ -6,12 +6,14 @@ import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeGlobal;
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeLocal;
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeWithSymbol;
 import com.bradyrussell.uiscoin.lang.compiler.symbol.SymbolBase;
+import com.bradyrussell.uiscoin.lang.compiler.symbol.SymbolFunction;
 import com.bradyrussell.uiscoin.lang.compiler.symbol.SymbolStruct;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
 import com.bradyrussell.uiscoin.lang.compiler.type.TypedValue;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
@@ -227,6 +229,54 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
     @Override
     public PrimitiveType visitCastExpression(UISCParser.CastExpressionContext ctx) {
         if(ctx.type().inferredType() != null) {
+            if(ctx.getParent() instanceof UISCParser.AssignmentStatementContext) {
+                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) ctx.getParent();
+                if(assignmentStatementContext.lhs != null) {
+                    ScopeBase scopeContaining = getCurrentScope().findScopeContaining(assignmentStatementContext.lhs.getText());
+
+                    if (scopeContaining == null) {
+                        System.out.println("Undefined symbol " + assignmentStatementContext.lhs.getText());
+                        return null;
+                    }
+
+                    if (scopeContaining.getSymbol(assignmentStatementContext.lhs.getText()) instanceof TypedValue) {
+                        System.out.println("Assigning to constant " + assignmentStatementContext.lhs.getText());
+                        return null;
+                    }
+
+                    if (scopeContaining.getSymbol(assignmentStatementContext.lhs.getText()) instanceof SymbolStruct) {
+                        throw new UnsupportedOperationException("Assigning whole struct values not yet supported.");
+                    }
+
+                    SymbolBase symbol = (SymbolBase) scopeContaining.getSymbol(assignmentStatementContext.lhs.getText());
+                    return symbol.type;
+                }
+            }
+
+            if(ctx.getParent() instanceof UISCParser.ExprListContext) {
+                // native
+
+                    // throw
+                    // catch
+
+                    // function
+                    // array initializer
+            }
+
+            if(ctx.getParent() instanceof UISCParser.ReturnStatementContext) {
+                ParserRuleContext context = ctx.getParent();
+                do {
+                  context = context.getParent();
+                } while (!(context instanceof UISCParser.FunctionDeclarationContext));
+
+                UISCParser.FunctionDeclarationContext functionDeclarationContext = (UISCParser.FunctionDeclarationContext) context;
+                if(functionDeclarationContext.type().primitiveType() != null) {
+                    return PrimitiveType.getByKeyword(functionDeclarationContext.type().primitiveType().getText());
+                } else {
+                    throw new UnsupportedOperationException("Auto/struct return type auto cast?");
+                }
+            }
+
             ParseTree lhs = ctx.getParent().getChild(0);
             if(lhs instanceof UISCParser.TypeContext) {
                 UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
@@ -239,7 +289,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                 }
                 return ctx.type().pointer() == null ? primitiveType : primitiveType.toPointer();
             } else {
-                throw new UnsupportedOperationException("This type of autocast is not yet implemented!");
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ctx.getParent().getClass().toString()+" -> " + lhs.getClass().toString());
             }
         }
         PrimitiveType primitiveType = PrimitiveType.getByKeyword(ctx.type().primitiveType().getText());

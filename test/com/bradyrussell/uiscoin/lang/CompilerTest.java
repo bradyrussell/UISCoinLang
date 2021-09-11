@@ -30,9 +30,14 @@ public class CompilerTest {
     @Test
     public void Test_TypeInferredCast() {
         String Script =
-                        "int64 x = (auto)true;\n" +
-                        "//int32 y(byte a) { return a; }\n" +
-                        "//auto b = y((auto)true);\n"; // todo function param autocast
+                                "int64 x = 600;\n" +
+                                "x = (auto)3.14159265;\n" +
+                                "//x = (auto)((auto)(auto)((auto)true));\n" +
+                                "int32 z(byte g) {\n" +
+                                "\treturn (auto)g;\n" +
+                                "}\n" +
+                                "//auto y = z((auto)x);\n" +
+                                "//float a = (auto)z((auto)(y));\n";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), null);
     }

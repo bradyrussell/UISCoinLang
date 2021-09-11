@@ -12,6 +12,7 @@ import com.bradyrussell.uiscoin.lang.generated.UISCBaseVisitor;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 import com.bradyrussell.uiscoin.script.ScriptOperator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -1049,6 +1050,58 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
 
         if(ctx.type().inferredType() != null) {
+            if(ctx.getParent() instanceof UISCParser.AssignmentStatementContext) {
+                UISCParser.AssignmentStatementContext assignmentStatementContext = (UISCParser.AssignmentStatementContext) ctx.getParent();
+                if(assignmentStatementContext.lhs != null) {
+                    ScopeBase scopeContaining = getCurrentScope().findScopeContaining(assignmentStatementContext.lhs.getText());
+
+                    if (scopeContaining == null) {
+                        System.out.println("Undefined symbol " + assignmentStatementContext.lhs.getText());
+                        return "Undefined symbol " + assignmentStatementContext.lhs.getText();
+                    }
+
+                    if (scopeContaining.getSymbol(assignmentStatementContext.lhs.getText()) instanceof TypedValue) {
+                        System.out.println("Assigning to constant " + assignmentStatementContext.lhs.getText());
+                        return "Assigning to constant " + assignmentStatementContext.lhs.getText();
+                    }
+
+                    if (scopeContaining.getSymbol(assignmentStatementContext.lhs.getText()) instanceof SymbolStruct) {
+                        throw new UnsupportedOperationException("Assigning whole struct values not yet supported.");
+                    }
+
+                    SymbolBase symbol = (SymbolBase) scopeContaining.getSymbol(assignmentStatementContext.lhs.getText());
+                    String castAssembly = ASMUtil.generateCastAssembly(fromType, symbol.type);
+
+                    if (castAssembly == null) {
+                        System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + symbol.type);
+                        return "CANNOT_CAST_FROM_" + fromType + "_TO_" + symbol.type + "_ERROR";
+                    }
+
+                    return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+                }
+            }
+
+            if(ctx.getParent() instanceof UISCParser.ReturnStatementContext) {
+                ParserRuleContext context = ctx.getParent();
+                do {
+                    context = context.getParent();
+                } while (!(context instanceof UISCParser.FunctionDeclarationContext));
+
+                UISCParser.FunctionDeclarationContext functionDeclarationContext = (UISCParser.FunctionDeclarationContext) context;
+                if(functionDeclarationContext.type().primitiveType() != null) {
+                    PrimitiveType primitiveType = PrimitiveType.getByKeyword(functionDeclarationContext.type().primitiveType().getText());
+                    String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                    if (castAssembly == null) {
+                        System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                        return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                    }
+                    return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+                } else {
+                    throw new UnsupportedOperationException("Auto/struct return type auto cast?");
+                }
+            }
+
             ParseTree lhs = ctx.getParent().getChild(0);
             if(lhs instanceof UISCParser.TypeContext) {
                 UISCParser.TypeContext lhsType = (UISCParser.TypeContext) lhs;
@@ -1068,7 +1121,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
                 return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
             } else {
-                throw new UnsupportedOperationException("This type of autocast is not yet implemented!");
+                throw new UnsupportedOperationException("This type of autocast is not yet implemented: "+ctx.getParent().getClass().toString()+" -> " + lhs.getClass().toString());
             }
         }
 
