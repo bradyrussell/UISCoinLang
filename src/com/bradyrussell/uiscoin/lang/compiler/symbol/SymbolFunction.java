@@ -7,8 +7,8 @@ import java.util.HashMap;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
 
 public class SymbolFunction extends SymbolBase {
-    HashMap<String, PrimitiveType> parameters = new HashMap<>();
-    ArrayList<String> parameterOrder = new ArrayList<>();
+    private HashMap<String, PrimitiveType> parameters = new HashMap<>();
+    private ArrayList<String> parameterOrder = new ArrayList<>();
 
     public boolean defineParameter(String Name, PrimitiveType ParameterType){
         if(parameters.containsKey(Name)) return false;
@@ -29,7 +29,6 @@ public class SymbolFunction extends SymbolBase {
         return parameters.get(getNameOfParameter(Index));
     }
 
-
     public String getNameOfParameter(int Index){
         return parameterOrder.get(Index);
     }
@@ -37,5 +36,4 @@ public class SymbolFunction extends SymbolBase {
     public int getNumberOfParameters(){
         return parameters.size();
     }
-
 }

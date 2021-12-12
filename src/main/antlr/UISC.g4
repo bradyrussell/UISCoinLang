@@ -116,7 +116,7 @@ flag:
     ;
 
 flagData:
-    'flagdata' '(' (STRING | HEXSTRING) ')' ';'
+    'flagdata' '(' HEXSTRING ',' (STRING | HEXSTRING) ')' ';'
     ;
 
 structField:

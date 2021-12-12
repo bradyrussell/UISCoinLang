@@ -1,14 +1,25 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.compiler;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import com.bradyrussell.uiscoin.BytesUtil;
 import com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem;
 import com.bradyrussell.uiscoin.lang.compiler.filesystem.StandardCompilerFileSystem;
+import com.bradyrussell.uiscoin.lang.compiler.type.NameAndType;
+import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
 import com.bradyrussell.uiscoin.lang.generated.UISCLexer;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 import com.bradyrussell.uiscoin.lang.syntaxhiglighting.SyntaxHighlightGenerator;
 import com.bradyrussell.uiscoin.lang.syntaxhiglighting.SyntaxHighlighterHtml;
+import com.bradyrussell.uiscoin.script.ScriptFlag;
 import com.bradyrussell.uiscoin.script.ScriptParser;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -18,6 +29,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class ASMUtil {
     public static boolean bNoComments = true;
+    public static boolean bNoDebugFlags = false;
     public static CompilerFileSystem defaultFileSystem = null;
 
     public static String generateComment(String Comment){
@@ -199,6 +211,16 @@ public class ASMUtil {
         return syntaxHighlighter.getText();
     }
 
+    public static boolean compileCodeFileToBytecodeFile(CompilerFileSystem compilerFileSystem, String inPath, String outPath) {
+        String fileAsString = compilerFileSystem.getFileAsString(inPath);
+        if(fileAsString != null) {
+            String toASM = ASMUtil.compileHLLToASM(fileAsString, compilerFileSystem);
+            byte[] bytecode = ScriptParser.CompileScriptTokensToBytecode(ScriptParser.GetTokensFromString(toASM, true));
+            return compilerFileSystem.writeFile(outPath, bytecode, false);
+        }
+        return false;
+    }
+
     public static String generateLoadArrayElement(int StackElementAddress, String ArrayIndexExpressionCastedToIntASM, int SizeOfElement){
         return  ASMUtil.generatePushNumberLiteralCast(StackElementAddress, PrimitiveType.Int32)+" "+ // push stack element
                 ArrayIndexExpressionCastedToIntASM +// push array index auto casted to int
@@ -217,5 +239,141 @@ public class ASMUtil {
                         " multiply"))+
                 ASMUtil.generatePushNumberLiteralCast(SizeOfElement,PrimitiveType.Int32)+
                 " set ";  // push sizeof
+    }
+
+    public static String generateDebugPushSection(String section){
+        if(bNoDebugFlags) { return ""; }
+        return " flagdata ["+ScriptFlag.PUSHSECTION.Bytecode+"] \""+section+"\"";
+    }
+
+    public static String generateDebugPopSection(){
+        if(bNoDebugFlags) { return ""; }
+        return " flag["+ScriptFlag.POPSECTION.Bytecode+"]";
+    }
+
+    public static String generateDebugVariableDeclaration(String name, PrimitiveStructOrArrayType type, int address){
+        if(bNoDebugFlags) { return ""; }
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+            byte[] typeBytes = type.toString().getBytes(StandardCharsets.UTF_8);
+
+            dataOutputStream.writeInt(nameBytes.length);
+            dataOutputStream.write(nameBytes);
+
+            dataOutputStream.writeInt(typeBytes.length);
+            dataOutputStream.write(typeBytes);
+
+            dataOutputStream.write(address);
+
+            return " flagdata ["+ScriptFlag.VARIABLEDECLARATION.Bytecode+"] 0x"+BytesUtil.bytesToHex(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+/*
+    public static String generateDebugVariableReference(String name, PrimitiveStructOrArrayType type, int address){
+        if(bNoDebugFlags) { return ""; }
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+            byte[] typeBytes = type.toString().getBytes(StandardCharsets.UTF_8);
+
+            dataOutputStream.writeInt(nameBytes.length);
+            dataOutputStream.write(nameBytes);
+
+            dataOutputStream.writeInt(typeBytes.length);
+            dataOutputStream.write(typeBytes);
+
+            dataOutputStream.write(address);
+
+            return " flagdata ["+ScriptFlag.VARIABLEREFERENCE.Bytecode+"] 0x"+BytesUtil.bytesToHex(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+*/
+
+    public static String generateDebugFunctionDeclaration(String name, PrimitiveStructOrArrayType type, List<NameAndType> parameters, int address){
+        if(bNoDebugFlags) { return ""; }
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+            byte[] typeBytes = type.toString().getBytes(StandardCharsets.UTF_8);
+
+            dataOutputStream.writeInt(nameBytes.length);
+            dataOutputStream.write(nameBytes);
+
+            dataOutputStream.writeInt(typeBytes.length);
+            dataOutputStream.write(typeBytes);
+
+            dataOutputStream.writeInt(parameters.size());
+            for (NameAndType parameter : parameters) {
+                byte[] paramNameBytes = parameter.Name.getBytes(StandardCharsets.UTF_8);
+                byte[] paramTypeBytes = parameter.Type.toString().getBytes(StandardCharsets.UTF_8);
+
+                dataOutputStream.writeInt(paramNameBytes.length);
+                dataOutputStream.write(paramNameBytes);
+
+                dataOutputStream.writeInt(paramTypeBytes.length);
+                dataOutputStream.write(paramTypeBytes);
+            }
+
+            dataOutputStream.write(address);
+
+            return " flagdata ["+ScriptFlag.FUNCTIONDECLARATION.Bytecode+"] 0x"+BytesUtil.bytesToHex(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String generateDebugFunctionCall(String name, PrimitiveStructOrArrayType type, List<NameAndType> parameters, int address){
+        if(bNoDebugFlags) { return ""; }
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+            byte[] typeBytes = type.toString().getBytes(StandardCharsets.UTF_8);
+
+            dataOutputStream.writeInt(nameBytes.length);
+            dataOutputStream.write(nameBytes);
+
+            dataOutputStream.writeInt(typeBytes.length);
+            dataOutputStream.write(typeBytes);
+
+            dataOutputStream.writeInt(parameters.size());
+            for (NameAndType parameter : parameters) {
+                byte[] paramNameBytes = parameter.Name.getBytes(StandardCharsets.UTF_8);
+                byte[] paramTypeBytes = parameter.Type.toString().getBytes(StandardCharsets.UTF_8);
+
+                dataOutputStream.writeInt(paramNameBytes.length);
+                dataOutputStream.write(paramNameBytes);
+
+                dataOutputStream.writeInt(paramTypeBytes.length);
+                dataOutputStream.write(paramTypeBytes);
+            }
+
+            dataOutputStream.write(address);
+
+            return " flagdata ["+ScriptFlag.FUNCTIONDECLARATION.Bytecode+"] 0x"+BytesUtil.bytesToHex(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

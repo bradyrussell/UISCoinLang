@@ -45,6 +45,43 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_ArraySize() {
+        String Script =
+                                "auto x[] = {300, 400, 500};\n" +
+                                "auto y[] = {(int64)3, -2};\n" +
+                                "auto z[] = {50, -60, 70, 80};\n" +
+                                "int32 xlen = _len(x)/_sizeof(x);\n" +
+                                "int32 ylen = _len(y)/_sizeof(y);\n" +
+                                "int32 zlen = _len(z)/_sizeof(z);\n";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 1, 44, 0, 0, 1, -112, 0, 0, 1, -12] [0, 0, 0, 0, 0, 0, 0, 3, -1, -1, -1, -1, -1, -1, -1, -2] [50, -60, 70, 80] [0, 0, 0, 3] [0, 0, 0, 2] [0, 0, 0, 4]");
+    }
+
+    @Test
+    public void Test_NestedIf() {
+        String Script =
+                        "int32 x() {\n" +
+                                "\tauto z = 365;\n" +
+                                "\tif(z > 1) {\n" +
+                                "\t\tif(z % 2 == 0) {\n" +
+                                "\t\t\treturn -1;\n" +
+                                "\t\t} else {\n" +
+                                "\t\t\treturn -2;\n" +
+                                "\t\t}\n" +
+                                "\t} else if(z > 2) {\n" +
+                                "\t\treturn 2;\n" +
+                                "\t} else {\n" +
+                                "\t\tint64 a = 1;\n" +
+                                "\t\treturn 3;\n" +
+                                "\t}\n" +
+                                "\tasm(\" nop \");\n" + // todo if statement jump needs this
+                                "}\n" +
+                                "auto y = x();";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_TypeInferredCastReturnedValue() {
         String Script =
                 "int64 y = 100;\n" +
@@ -57,13 +94,17 @@ public class CompilerTest {
     }
 
     @Test
-    public void Test_Main() {
+    public void Test_Main() { // allocator problem?
         String Script =
-                "void main[](void in[]) {\n" +
-                        "\treturn ;\n" +
+                "int32 x(int64 y) {\n" +
+                        "\treturn (auto)_pow((auto)y, (auto)2);\n" +
+                        "}\n" +
+                        "\n" +
+                        "void main[]() {\n" +
+                        "\treturn x(2);\n" +
                         "}";
 
-        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+        //performStandardTests(ASMUtil.compileHLLToASM(Script), null);
     }
 
     @Test
@@ -216,8 +257,8 @@ public class CompilerTest {
                         "int32 x = 12;\n" +
                         "int32 y = 38;\n" +
                         "flag(5);\n" +
-                        "flagdata(0x5235);\n" +
-                        "flagdata(\"string\");\n" +
+                        "flagdata(0x52,0x0535);\n" +
+                        "flagdata(0x01,\"string\");\n" +
                         "assert(x+y == 50);";
 
         System.out.println(ASMUtil.compileHLLToASM(Script));
@@ -355,7 +396,8 @@ public class CompilerTest {
                         "o = (void)_unzip(_zip(_decrypt(_encrypt(m, k), k)));\n" +
                         "_copy($m, (int32)0, $k, (int32)0, (int32)2);\n"+
                         "int32 len = _len(o);\n"+
-                        "int32 sizeof = _sizeof(len);";
+                        "int32 sizeof = _sizeof(len);\n"+
+                        "flagdata(0x01, 0x05);";
 
         performStandardTests(ASMUtil.compileHLLToASM(Script), "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [72, 101, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121] [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33] [0, 0, 0, 12] [0, 0, 0, 4]");
     }

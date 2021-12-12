@@ -17,10 +17,6 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
-    HashMap<String, List<PrimitiveType>> nativeFunctionCallParameters = new HashMap<>();
-
-    ////////////////////////
-
     private String mainFunctionAsm = null;
 
     public String getMainFunctionAsm() {
@@ -75,42 +71,157 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         CurrentLocalScope = null;
     }
 
+    private String generateCompilerError(String message, ParserRuleContext ctx) {
+        return "COMPILER_ERROR@L" + ctx.start.getLine() + "C" + ctx.start.getCharPositionInLine()+"<"+message+">";
+    }
+
+    private String generateCompilerWarning(String message, ParserRuleContext ctx) {
+        return "COMPILER_WARNING@L" + ctx.start.getLine() + "C" + ctx.start.getCharPositionInLine()+"<"+message+">";
+    }
+
     ////////////////////////
     private final CompilerFileSystem fileSystem;
 
     public ASMGenerationVisitor(CompilerFileSystem fileSystem) {
         this.fileSystem = fileSystem;
-        nativeFunctionCallParameters.put("set", List.of(PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32)); // location, position, length, value
-        nativeFunctionCallParameters.put("get", List.of(PrimitiveType.Int32, PrimitiveType.Int32, PrimitiveType.Int32)); // location, position, length
-        nativeFunctionCallParameters.put("copy", List.of(PrimitiveType.VoidPointer, PrimitiveType.Int32, PrimitiveType.VoidPointer, PrimitiveType.Int32, PrimitiveType.Int32)); // sourceLocation, sourcePosition, destinationLocation, destinationPosition, length
-        nativeFunctionCallParameters.put("encrypt", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("decrypt", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("verifySig", List.of(PrimitiveType.ByteArray, PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("alloc", List.of(PrimitiveType.Int32, PrimitiveType.Int32)); // location, size
-        nativeFunctionCallParameters.put("zip", List.of(PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("unzip", List.of(PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("sha512", List.of(PrimitiveType.ByteArray));
-        nativeFunctionCallParameters.put("instruction", List.of());
-        nativeFunctionCallParameters.put("log", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("logn", List.of(PrimitiveType.Float, PrimitiveType.Float));
-        nativeFunctionCallParameters.put("isinf", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("isnan", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("isfin", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("pow", List.of(PrimitiveType.Float, PrimitiveType.Float));
-        nativeFunctionCallParameters.put("root", List.of(PrimitiveType.Float, PrimitiveType.Float));
-        nativeFunctionCallParameters.put("abs", List.of(PrimitiveType.Int64));
-        nativeFunctionCallParameters.put("fabs", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("sin", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("cos", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("tan", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("asin", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("acos", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("atan", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("floor", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("ceil", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("round", List.of(PrimitiveType.Float));
-        nativeFunctionCallParameters.put("len", List.of(PrimitiveType.Void));
-        nativeFunctionCallParameters.put("sizeof", List.of(PrimitiveType.Void));
+
+        Global.defineNative("set", PrimitiveType.Void, List.of(
+                new NameAndType("location", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("position", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("length", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Int32))
+        ));
+
+        Global.defineNative("get", PrimitiveType.ByteArray, List.of(
+                new NameAndType("location", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("position", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("length", new PrimitiveStructOrArrayType(PrimitiveType.Int32))
+        ));
+
+        Global.defineNative("copy", PrimitiveType.Void, List.of(
+                new NameAndType("sourceLocation", new PrimitiveStructOrArrayType(PrimitiveType.VoidPointer)),
+                new NameAndType("sourcePosition", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("destinationLocation", new PrimitiveStructOrArrayType(PrimitiveType.VoidPointer)),
+                new NameAndType("destinationPosition", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("length", new PrimitiveStructOrArrayType(PrimitiveType.Int32))
+        ));
+
+        Global.defineNative("encrypt", PrimitiveType.ByteArray, List.of(
+                new NameAndType("key", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray)),
+                new NameAndType("data", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("decrypt", PrimitiveType.ByteArray, List.of(
+                new NameAndType("key", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray)),
+                new NameAndType("data", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("verifySig", PrimitiveType.Void, List.of(
+                new NameAndType("signature", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray)),
+                new NameAndType("publicKey", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("alloc", PrimitiveType.Void, List.of(
+                new NameAndType("location", new PrimitiveStructOrArrayType(PrimitiveType.Int32)),
+                new NameAndType("size", new PrimitiveStructOrArrayType(PrimitiveType.Int32))
+        ));
+
+        Global.defineNative("zip", PrimitiveType.ByteArray, List.of(
+                new NameAndType("data", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("unzip", PrimitiveType.ByteArray, List.of(
+                new NameAndType("data", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("sha512", PrimitiveType.ByteArray, List.of(
+                new NameAndType("data", new PrimitiveStructOrArrayType(PrimitiveType.ByteArray))
+        ));
+
+        Global.defineNative("instruction", PrimitiveType.Int32, List.of());
+
+        Global.defineNative("log", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("logn", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float)),
+                new NameAndType("n", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("isinf", PrimitiveType.Byte, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("isnan", PrimitiveType.Byte, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("isfin", PrimitiveType.Byte, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("pow", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float)),
+                new NameAndType("power", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("root", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float)),
+                new NameAndType("root", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("abs", PrimitiveType.Int64, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Int64))
+        ));
+
+        Global.defineNative("fabs", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("sin", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("cos", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("tan", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("asin", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("acos", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("atan", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("floor", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("ceil", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("round", PrimitiveType.Float, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Float))
+        ));
+
+        Global.defineNative("len", PrimitiveType.Int32, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Void))
+        ));
+
+        Global.defineNative("sizeof", PrimitiveType.Int32, List.of(
+                new NameAndType("value", new PrimitiveStructOrArrayType(PrimitiveType.Void))
+        ));
     }
 
     private String getNextLabel() {
@@ -128,20 +239,20 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         return QuotedString.substring(1, QuotedString.length() - 1);
     }
 
-    private String getCastedBinaryExpression(UISCParser.ExpressionContext LHS, UISCParser.ExpressionContext RHS, String BinaryOperationForIntegers, String BinaryOperationForFloats) {
+    private String getCastedBinaryExpression(UISCParser.ExpressionContext LHS, UISCParser.ExpressionContext RHS, String BinaryOperationForIntegers, String BinaryOperationForFloats, ParserRuleContext ctx) {
         PrimitiveType lhsType = LHS.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
         PrimitiveType rhsType = RHS.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
 
         if (lhsType == null || rhsType == null) {
             System.out.println("Type null! Cannot determine type: " + lhsType + " and " + rhsType);
-            return "TYPE_NULL_" + lhsType + "_AND_" + rhsType + "_ERROR";
+            return generateCompilerError("TYPE_NULL_" + lhsType + "_AND_" + rhsType + "_ERROR", ctx);
         }
 
         PrimitiveType outputType = PrimitiveType.getWiderType(lhsType, rhsType);
 
         if (outputType == null) {
             System.out.println("Type mismatch! Cannot combine types " + lhsType + " and " + rhsType);
-            return "TYPE_MISMATCH_CANNOT_COMBINE_" + lhsType + "_AND_" + rhsType + "_ERROR";
+            return generateCompilerError("TYPE_MISMATCH_CANNOT_COMBINE_" + lhsType + "_AND_" + rhsType + "_ERROR", ctx);
         }
 
         return visit(LHS) + " " + ASMUtil.generateCastAssembly(lhsType, outputType) + visit(RHS) + " " + ASMUtil.generateCastAssembly(rhsType, outputType) + (outputType.equals(PrimitiveType.Float) ? BinaryOperationForFloats : BinaryOperationForIntegers) + " ";
@@ -165,8 +276,6 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     @Override
     public String visitNumberLiteralExpression(UISCParser.NumberLiteralExpressionContext ctx) {
         return ASMUtil.generatePushNumberLiteralCast(ctx.number().getText(), null);
-        //PrimitiveType typeOfInteger = PrimitiveType.deduceTypeOfNumber(ctx.number().getText());
-        //return ASMUtil.generateComment(typeOfInteger+ " literal "+ctx.getText()) + "push " + (PrimitiveType.Byte.equals(typeOfInteger) ? "[":"") + ctx.number().getText()+ (PrimitiveType.Byte.equals(typeOfInteger) ? "]":"");
     }
 
     @Override
@@ -206,7 +315,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         if (byKeyword == null || !PrimitiveType.ByteArray.equals(byKeyword.toArray())) {
             System.out.println("Cannot string initialize " + byKeyword + " array! " + ctx.ID().getText());
-            return "TYPE_MISMATCH_" + ctx.ID().getText();
+            return generateCompilerError("TYPE_MISMATCH_" + ctx.ID().getText(), ctx);
         }
 
         String strValue = stripQuotesFromString(ctx.STRING().getText());
@@ -214,7 +323,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         if (address < 0) {
             System.out.println("Symbol was already defined in this scope! " + ctx.ID().getText());
-            return "SYMBOL_REDEFINITION_" + ctx.ID().getText();
+            return generateCompilerError("SYMBOL_REDEFINITION_" + ctx.ID().getText(), ctx);
         }
 
         return ASMUtil.generateComment("Array string initialization " + ctx.getText()) + " push \"" + strValue + "\"" + ASMUtil.generateStoreAddress(address)/*" push [" + address + "] put"*/;
@@ -459,7 +568,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitFlagDataStatement(UISCParser.FlagDataStatementContext ctx) {
-        return "flagdata " + ctx.flagData().getChild(2).getText(); // asm compiler handles strings and hex strings
+        return "flagdata " + ctx.flagData().getChild(2).getText()+" " + ctx.flagData().getChild(4).getText(); // asm compiler handles strings and hex strings
     }
 
     @Override
@@ -713,7 +822,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         } else {
             PrimitiveType definedReturnType = PrimitiveType.getByKeyword(functionDeclaration.type().getText());
             if (returnedType.widensTo(definedReturnType)) {
-                return ASMUtil.generateComment("Return statement " + ctx.getText()) + " " + visit(ctx.retval) + ASMUtil.generateCastAssembly(returnedType, definedReturnType);
+                return ASMUtil.generateComment("Return statement " + ctx.getText()) + " " + visit(ctx.retval) + " " + ASMUtil.generateCastAssembly(returnedType, definedReturnType);
             } else {
                 System.out.println("Type mismatch! Expected " + definedReturnType + " found " + returnedType);
                 return "RETURN_TYPE_MISMATCH_EXPECTED_" + definedReturnType + "_FOUND_" + returnedType + "_ERROR";
@@ -929,16 +1038,16 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     public String visitComparisonExpression(UISCParser.ComparisonExpressionContext ctx) {
         switch (ctx.op.getText()) {
             case "<" -> {
-                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthan", " lessthan");
+                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthan", " lessthan", ctx);
             }
             case "<=" -> {
-                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthanequal", " lessthanequal");
+                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " lessthanequal", " lessthanequal", ctx);
             }
             case ">" -> {
-                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthan", " greaterthan");
+                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthan", " greaterthan", ctx);
             }
             case ">=" -> {
-                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthanequal", " greaterthanequal");
+                return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " greaterthanequal", " greaterthanequal", ctx);
             }
             default -> {
                 return "INVALID_COMPARISON_OPERATOR_ERROR";
@@ -953,7 +1062,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitModuloExpression(UISCParser.ModuloExpressionContext ctx) {
-        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "modulo", "convertfloatto32 swap convertfloatto32 swap modulo convert32tofloat"); // dont think there is float mod
+        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "modulo", "convertfloatto32 swap convertfloatto32 swap modulo convert32tofloat", ctx); // dont think there is float mod
     }
 
     @Override
@@ -1001,16 +1110,16 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     @Override
     public String visitBitwiseExpression(UISCParser.BitwiseExpressionContext ctx) {
         if (ctx.op.getText().contains("&")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitand", "bitand");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitand", "bitand", ctx);
         }
         if (ctx.op.getText().contains("|")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitor", "bitor");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitor", "bitor", ctx);
         }
         if (ctx.op.getText().contains("^")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitxor", "bitxor");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitxor", "bitxor", ctx);
         }
         if (ctx.op.getText().contains("~")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitnot", "bitnot");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "bitnot", "bitnot", ctx);
         }
         return super.visitBitwiseExpression(ctx);
     }
@@ -1168,6 +1277,21 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                     }
                 }
 
+                if(context instanceof UISCParser.NativeCallExpressionContext) {
+                    UISCParser.NativeCallExpressionContext nativeCallExpressionContext = (UISCParser.NativeCallExpressionContext) context;
+                    String nativeId = nativeCallExpressionContext.ID().getText();
+
+                    SymbolFunction nativeDefinition = Global.getNativeDefinition(nativeId);
+                    PrimitiveType primitiveType = nativeDefinition.getTypeOfParameter(exprListIndex);
+                    String castAssembly = ASMUtil.generateCastAssembly(fromType, primitiveType);
+
+                    if (castAssembly == null) {
+                        System.out.println("Type mismatch! Cannot cast from " + fromType + " to " + primitiveType);
+                        return "CANNOT_CAST_FROM_" + fromType + "_TO_" + primitiveType + "_ERROR";
+                    }
+                    return ASMUtil.generateComment("Cast " + ctx.getText()) + visit(ctx.expression()) + " " + castAssembly;
+                }
+
                 if(context instanceof UISCParser.ArrayValueInitializationContext) {
                     UISCParser.ArrayValueInitializationContext arrayValueInitializationContext = (UISCParser.ArrayValueInitializationContext) context;
                     if(arrayValueInitializationContext.type().inferredType() != null) {
@@ -1218,7 +1342,7 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitEqualityExpression(UISCParser.EqualityExpressionContext ctx) {
-        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""), " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""));
+        return getCastedBinaryExpression(ctx.lhs, ctx.rhs, " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""), " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : ""), ctx);
         //return visit(ctx.lhs) + " " + visit(ctx.rhs) + " bytesequal" + (ctx.op.getText().contains("!=") ? " not" : "");
     }
 
@@ -1249,14 +1373,14 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
                 getCurrentScope().findScopeContaining(((UISCParser.VariableReferenceExpressionContext) ctx.lhs).ID().getText()).getSymbol(((UISCParser.VariableReferenceExpressionContext) ctx.lhs).ID().getText()) instanceof SymbolArray)) {
             // todo this will throw off symbol array lengths, so uforeach wouldnt work. dont see how this can work unless the sizes are fixed. maybe use set 0, len*size instead? to force user to create new array long enough
             // yeah could be a void that takes a pointer to fill in
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "append", "append");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "append", "append", ctx);
         }
 
         if (ctx.op.getText().contains("+")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "add", "addfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "add", "addfloat", ctx);
         }
         if (ctx.op.getText().contains("-")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "subtract", "subtractfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "subtract", "subtractfloat", ctx);
         }
         return super.visitAddSubExpression(ctx);
     }
@@ -1264,10 +1388,10 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
     @Override
     public String visitMultDivExpression(UISCParser.MultDivExpressionContext ctx) {
         if (ctx.op.getText().contains("*")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "multiply", "multiplyfloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "multiply", "multiplyfloat", ctx);
         }
         if (ctx.op.getText().contains("/")) {
-            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "divide", "dividefloat");
+            return getCastedBinaryExpression(ctx.lhs, ctx.rhs, "divide", "dividefloat", ctx);
         }
         return super.visitMultDivExpression(ctx);
     }
@@ -1434,9 +1558,15 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) {
-        if (!nativeFunctionCallParameters.containsKey(ctx.ID().getText()))
+        SymbolFunction nativeDefinition = Global.getNativeDefinition(ctx.ID().getText());
+        if (nativeDefinition == null) {
             throw new UnsupportedOperationException("Unknown native call: " + ctx.ID().getText());
-        List<PrimitiveType> ParamsExpected = nativeFunctionCallParameters.get(ctx.ID().getText());
+        }
+
+        List<PrimitiveType> ParamsExpected = new ArrayList<>();
+        for (int i = 0; i < nativeDefinition.getNumberOfParameters(); i++) {
+            ParamsExpected.add(nativeDefinition.getTypeOfParameter(i));
+        }
 
         if (ParamsExpected.size() != 0 && ctx.exprList().expression() == null) {
             return "NATIVE_CALL_" + ctx.ID().getText() + "_EXPECTED_" + ParamsExpected + "_PARAMETERS_FOUND_0";

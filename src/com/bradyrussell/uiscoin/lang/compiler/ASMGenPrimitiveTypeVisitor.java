@@ -121,24 +121,7 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
 
     @Override
     public PrimitiveType visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) {
-        switch (ctx.ID().getText()) {
-            case "encrypt","decrypt","zip","unzip","sha512","get" ->{
-                return PrimitiveType.ByteArray;
-            }
-            case "verifySig","copy","set" -> {
-                return PrimitiveType.Void;
-            }
-            case "instruction", "len", "sizeof" -> {
-                return PrimitiveType.Int32;
-            }
-            case "isnan", "isinf", "isfin" -> {
-                return PrimitiveType.Byte;
-            }
-            case "log", "logn", "pow", "root", "fabs", "sin", "cos", "tan", "asin", "acos", "atan", "floor", "ceil", "round" -> {
-                return PrimitiveType.Float;
-            }
-        }
-        throw new UnsupportedOperationException("Type not defined for native: "+ctx.getText());
+        return Global.getNativeDefinition(ctx.ID().getText()).type;
     }
 
     @Override
@@ -306,6 +289,20 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                     }
                 }
 
+                if(context instanceof UISCParser.NativeCallExpressionContext) {
+                    UISCParser.NativeCallExpressionContext nativeCallExpressionContext = (UISCParser.NativeCallExpressionContext) context;
+                    String nativeId = nativeCallExpressionContext.ID().getText();
+                    SymbolFunction nativeDefinition = Global.getNativeDefinition(nativeId);
+                    if(nativeDefinition == null) {
+                        throw new UnsupportedOperationException("Native \""+nativeId+"\" is not defined!");
+                    }
+                    PrimitiveType typeOfParameter = nativeDefinition.getTypeOfParameter(exprListIndex);
+                    if(typeOfParameter == null) {
+                        throw new UnsupportedOperationException("Native \""+nativeId+"\" parameter "+exprListIndex+" is not defined!");
+                    }
+                    return typeOfParameter;
+                }
+
                 if(context instanceof UISCParser.ArrayValueInitializationContext) {
                     UISCParser.ArrayValueInitializationContext arrayValueInitializationContext = (UISCParser.ArrayValueInitializationContext) context;
                     if(arrayValueInitializationContext.type().inferredType() != null) {
@@ -315,7 +312,6 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
                 }
 
                 throw new UnsupportedOperationException("Auto cast in expression "+context.getClass().toString());
-                    // native
                     // throw
                     // catch
                     // array initializer
