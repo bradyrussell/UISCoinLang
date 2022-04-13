@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -119,6 +119,11 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bNoDebugFlags">bNoDebugFlags</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#defaultFileSystem">defaultFileSystem</a></span></code></th>
 <td class="colLast">&nbsp;</td>
@@ -172,95 +177,135 @@ extends java.lang.Object</pre>
 </thead>
 <tbody>
 <tr class="altColor" id="i0">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compileCodeFileToBytecodeFile(com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem,java.lang.String,java.lang.String)">compileCodeFileToBytecodeFile</a></span>&#8203;(<a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;compilerFileSystem,
+java.lang.String&nbsp;inPath,
+java.lang.String&nbsp;outPath)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i1">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compileHLLToASM(java.lang.String)">compileHLLToASM</a></span>&#8203;(java.lang.String&nbsp;HLL)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr class="altColor" id="i2">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compileHLLToASM(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">compileHLLToASM</a></span>&#8203;(java.lang.String&nbsp;HLL,
 <a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;fileSystem)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i2">
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compileHLLToSyntaxMarkup(java.lang.String)">compileHLLToSyntaxMarkup</a></span>&#8203;(java.lang.String&nbsp;HLL)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateCastAssembly(com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">generateCastAssembly</a></span>&#8203;(<a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;From,
 <a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;To)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateComment(java.lang.String)">generateComment</a></span>&#8203;(java.lang.String&nbsp;Comment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i5">
-<td class="colFirst"><code>static java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateExecuteZippedASM(java.lang.String)">generateExecuteZippedASM</a></span>&#8203;(java.lang.String&nbsp;ASM)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>static java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateExecuteZippedBytecode(byte%5B%5D)">generateExecuteZippedBytecode</a></span>&#8203;(byte[]&nbsp;ZippedByteCode)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDebugFunctionCall(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,java.util.List,int)">generateDebugFunctionCall</a></span>&#8203;(java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+java.util.List&lt;<a href="type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;parameters,
+int&nbsp;address)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>static java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateLoadAddress(int)">generateLoadAddress</a></span>&#8203;(int&nbsp;Address)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDebugFunctionDeclaration(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,java.util.List,int)">generateDebugFunctionDeclaration</a></span>&#8203;(java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+java.util.List&lt;<a href="type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;parameters,
+int&nbsp;address)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i8">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDebugPopSection()">generateDebugPopSection</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i9">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDebugPushSection(java.lang.String)">generateDebugPushSection</a></span>&#8203;(java.lang.String&nbsp;section)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i10">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDebugVariableDeclaration(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,int)">generateDebugVariableDeclaration</a></span>&#8203;(java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+int&nbsp;address)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i11">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateExecuteZippedASM(java.lang.String)">generateExecuteZippedASM</a></span>&#8203;(java.lang.String&nbsp;ASM)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i12">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateExecuteZippedBytecode(byte%5B%5D)">generateExecuteZippedBytecode</a></span>&#8203;(byte[]&nbsp;ZippedByteCode)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i13">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateLoadAddress(int)">generateLoadAddress</a></span>&#8203;(int&nbsp;Address)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateLoadArrayElement(int,java.lang.String,int)">generateLoadArrayElement</a></span>&#8203;(int&nbsp;StackElementAddress,
 java.lang.String&nbsp;ArrayIndexExpressionCastedToIntASM,
 int&nbsp;SizeOfElement)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generatePushASMString(java.lang.String)">generatePushASMString</a></span>&#8203;(java.lang.String&nbsp;ASMString)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generatePushNumberLiteralCast(long,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">generatePushNumberLiteralCast</a></span>&#8203;(long&nbsp;LiteralInteger,
 <a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;CastToType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generatePushNumberLiteralCast(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">generatePushNumberLiteralCast</a></span>&#8203;(java.lang.String&nbsp;NumberLiteralString,
 <a href="type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;CastToType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateStoreAddress(int)">generateStoreAddress</a></span>&#8203;(int&nbsp;Address)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateStoreArrayElement(int,java.lang.String,int)">generateStoreArrayElement</a></span>&#8203;(int&nbsp;StackElementAddress,
 java.lang.String&nbsp;ArrayIndexExpressionCastedToIntASM,
 int&nbsp;SizeOfElement)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#performBasicOptimizations(java.lang.String)">performBasicOptimizations</a></span>&#8203;(java.lang.String&nbsp;ASMString)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolveIncludes(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem)">resolveIncludes</a></span>&#8203;(java.lang.String&nbsp;HLL,
 <a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;fileSystem)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="altColor" id="i22">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolveIncludes(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem,int)">resolveIncludes</a></span>&#8203;(java.lang.String&nbsp;HLL,
 <a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;fileSystem,
@@ -293,6 +338,12 @@ int&nbsp;maximumDepth)</code></th>
 <section class="detail">
 <h3><a id="bNoComments">bNoComments</a></h3>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">bNoComments</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="bNoDebugFlags">bNoDebugFlags</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">bNoDebugFlags</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -426,6 +477,14 @@ int&nbsp;maximumDepth)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="compileCodeFileToBytecodeFile(com.bradyrussell.uiscoin.lang.compiler.filesystem.CompilerFileSystem,java.lang.String,java.lang.String)">compileCodeFileToBytecodeFile</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">compileCodeFileToBytecodeFile</span>&#8203;(<span class="arguments"><a href="filesystem/CompilerFileSystem.html" title="interface in com.bradyrussell.uiscoin.lang.compiler.filesystem">CompilerFileSystem</a>&nbsp;compilerFileSystem,
+java.lang.String&nbsp;inPath,
+java.lang.String&nbsp;outPath)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="generateLoadArrayElement(int,java.lang.String,int)">generateLoadArrayElement</a></h3>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateLoadArrayElement</span>&#8203;(<span class="arguments">int&nbsp;StackElementAddress,
 java.lang.String&nbsp;ArrayIndexExpressionCastedToIntASM,
@@ -438,6 +497,44 @@ int&nbsp;SizeOfElement)</span></div>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateStoreArrayElement</span>&#8203;(<span class="arguments">int&nbsp;StackElementAddress,
 java.lang.String&nbsp;ArrayIndexExpressionCastedToIntASM,
 int&nbsp;SizeOfElement)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="generateDebugPushSection(java.lang.String)">generateDebugPushSection</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateDebugPushSection</span>&#8203;(<span class="arguments">java.lang.String&nbsp;section)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="generateDebugPopSection()">generateDebugPopSection</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateDebugPopSection</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="generateDebugVariableDeclaration(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,int)">generateDebugVariableDeclaration</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateDebugVariableDeclaration</span>&#8203;(<span class="arguments">java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+int&nbsp;address)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="generateDebugFunctionDeclaration(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,java.util.List,int)">generateDebugFunctionDeclaration</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateDebugFunctionDeclaration</span>&#8203;(<span class="arguments">java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+java.util.List&lt;<a href="type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;parameters,
+int&nbsp;address)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="generateDebugFunctionCall(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType,java.util.List,int)">generateDebugFunctionCall</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">generateDebugFunctionCall</span>&#8203;(<span class="arguments">java.lang.String&nbsp;name,
+<a href="type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&nbsp;type,
+java.util.List&lt;<a href="type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;parameters,
+int&nbsp;address)</span></div>
 </section>
 </li>
 </ul>

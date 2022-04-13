@@ -32,6 +32,7 @@ publishing {
 		maven {
 			url = version.endsWith('SNAPSHOT') ? "https://repo.bradyrussell.com/repository/bradyrussell-snapshot/" : "https://repo.bradyrussell.com/repository/bradyrussell-release/"
 			credentials {
+
 				username = repoUsername
 				password = repoPassword
 			}
