@@ -11,6 +11,7 @@ import com.bradyrussell.uiscoin.lang.compiler.type.*;
 import com.bradyrussell.uiscoin.lang.generated.UISCBaseVisitor;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 import com.bradyrussell.uiscoin.script.ScriptOperator;
+import com.ibm.icu.text.ArabicShaping;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
@@ -381,7 +382,6 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
     @Override
     public String visitVarInitialization(UISCParser.VarInitializationContext ctx) {
-
         PrimitiveType primitiveType = null;
 
         if (ctx.type().inferredType() != null) {
@@ -472,6 +472,61 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
             System.out.println(">>Initialized struct symbol " + ctx.ID().getText() + " of type " + ctx.type().structType().getText() + " with address " + address);
             return getCurrentScope().findStructDefinition(ctx.type().getText()).generateAllocatorASM() + ASMUtil.generateStoreAddress(address);
+        }
+
+        if (ctx.type().tupleType() != null) {
+            if (ctx.type().pointer() != null) {
+                throw new UnsupportedOperationException("Tuple pointers are not yet implemented.");
+            }
+
+            ArrayList<PrimitiveStructOrArrayType> tupleTypes = new ArrayList<>();
+            for (UISCParser.TypeContext type : ctx.type().tupleType().type()) {
+                if (type.primitiveType() == null) {
+                    throw new UnsupportedOperationException("Non-primitive tuples are not currently supported");
+                }
+
+                tupleTypes.add(new PrimitiveStructOrArrayType(type.pointer() == null ? PrimitiveType.getByKeyword(type.primitiveType().getText()) : PrimitiveType.getByKeyword(type.primitiveType().getText()).toPointer()));
+            }
+
+            int address = getCurrentScope().declareTuple(ctx.ID().getText(), tupleTypes);
+
+            if (address < 0) {
+                System.out.println("Tuple symbol was already defined in this scope! " + ctx.ID().getText());
+                return generateCompilerError("TUPLE_SYMBOL_REDEFINITION_" + ctx.ID().getText(), ctx);
+            }
+
+            if (ctx.expression() != null) {
+                if(ctx.expression() instanceof UISCParser.TupleExpressionContext) {
+                    UISCParser.TupleExpressionContext tuple = (UISCParser.TupleExpressionContext) ctx.expression();
+
+                    SymbolStruct structSymbol = (SymbolStruct) getCurrentScope().getSymbol(ctx.ID().getText());
+                    if(structSymbol.struct.getOrderedTypes().size() != tuple.expression().size()) {
+                        return generateCompilerError("Cannot assign tuple with "+tuple.expression().size()+" elements to tuple with "+ structSymbol.struct.getOrderedTypes().size()+" elements!", ctx);
+                    }
+
+                    StringBuilder sb = new StringBuilder();
+
+                    List<UISCParser.ExpressionContext> expressionContexts = tuple.expression();
+                    for (int i = 0; i < expressionContexts.size(); i++) {
+                        // visit
+                        sb.append(visit(expressionContexts.get(i)));
+
+                        // cast
+                        sb.append(ASMUtil.generateCastAssembly(expressionContexts.get(i).accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope)), structSymbol.struct.getOrderedTypes().get(i).PrimitiveType));
+                    }
+                    // join
+                    sb.append(ASMUtil.generatePushNumberLiteralCast(expressionContexts.size(), PrimitiveType.Byte));
+                    sb.append(" combine ");
+
+                    //store
+                    sb.append(ASMUtil.generateStoreAddress(address));
+                    return sb.toString();
+                }
+                throw new UnsupportedOperationException("Assigning tuple values on initialization is not yet supported.");
+            }
+
+            System.out.println(">>Initialized tuple symbol " + ctx.ID().getText() + " of type " + ctx.type().tupleType().getText() + " with address " + address);
+            return getCurrentScope().findStructDefinition(ScopeBase.getTupleName(tupleTypes)).generateAllocatorASM() + ASMUtil.generateStoreAddress(address);
         }
 
         throw new UnsupportedOperationException("Invalid variable initialization: " + ctx.getText());
@@ -692,10 +747,6 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
             return generateCompilerError("Assigning to constant " + ctx.ID().getText(), ctx);
         }
 
-        if (scopeContaining.getSymbol(ctx.lhs.getText()) instanceof SymbolStruct) {
-            throw new UnsupportedOperationException("Assigning whole struct values not yet supported.");
-        }
-
         SymbolBase symbol = (SymbolBase) scopeContaining.getSymbol(ctx.lhs.getText());
 
         if (symbol == null) {
@@ -703,6 +754,37 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
         }
 
         PrimitiveType rhsType = ctx.rhs.accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope));
+
+        // assign entire struct / tuple
+        if (symbol instanceof SymbolStruct) {
+            if(ctx.rhs instanceof UISCParser.TupleExpressionContext) {
+                UISCParser.TupleExpressionContext tuple = (UISCParser.TupleExpressionContext) ctx.rhs;
+
+                SymbolStruct structSymbol = (SymbolStruct) symbol;
+                if(structSymbol.struct.getOrderedTypes().size() != tuple.expression().size()) {
+                    return generateCompilerError("Cannot assign tuple with "+tuple.expression().size()+" elements to tuple with "+ structSymbol.struct.getOrderedTypes().size()+" elements!", ctx);
+                }
+
+                StringBuilder sb = new StringBuilder();
+
+                List<UISCParser.ExpressionContext> expressionContexts = tuple.expression();
+                for (int i = 0; i < expressionContexts.size(); i++) {
+                    // visit
+                    sb.append(visit(expressionContexts.get(i)));
+
+                    // cast
+                    sb.append(ASMUtil.generateCastAssembly(expressionContexts.get(i).accept(new ASMGenPrimitiveTypeVisitor(Global, CurrentLocalScope)), structSymbol.struct.getOrderedTypes().get(i).PrimitiveType));
+                }
+                // join
+                sb.append(ASMUtil.generatePushNumberLiteralCast(expressionContexts.size(), PrimitiveType.Byte));
+                sb.append(" combine ");
+
+                //store
+                sb.append(symbol.generateSetSymbolASM());
+                return sb.toString();
+            }
+            throw new UnsupportedOperationException("Struct / tuple assignment not supported");
+        }
 
         boolean bShouldWiden = false;
 
@@ -1717,7 +1799,24 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         if (ctx.formalParameters() != null) {
             for (UISCParser.FormalParameterContext formalParameterContext : ctx.formalParameters().formalParameter()) {
-                Parameters.add(new NameAndType(formalParameterContext.ID().getText(), new PrimitiveStructOrArrayType(PrimitiveType.getByKeyword(formalParameterContext.type().getText()))));
+
+                if(formalParameterContext.type().primitiveType() != null) {
+                    Parameters.add(new NameAndType(formalParameterContext.ID().getText(), new PrimitiveStructOrArrayType(PrimitiveType.getByKeyword(formalParameterContext.type().getText()))));
+                } else if(formalParameterContext.type().structType() != null) {
+                    Parameters.add(new NameAndType(formalParameterContext.ID().getText(), new PrimitiveStructOrArrayType(formalParameterContext.type().structType().getText())));
+                } else if(formalParameterContext.type().tupleType() != null) {
+
+                    ArrayList<PrimitiveStructOrArrayType> tupleTypes = new ArrayList<>();
+                    for (UISCParser.TypeContext type : formalParameterContext.type().tupleType().type()) {
+                        if (type.primitiveType() == null) {
+                            throw new UnsupportedOperationException("Non-primitive tuples are not currently supported");
+                        }
+
+                        tupleTypes.add(new PrimitiveStructOrArrayType(type.pointer() == null ? PrimitiveType.getByKeyword(type.primitiveType().getText()) : PrimitiveType.getByKeyword(type.primitiveType().getText()).toPointer()));
+                    }
+
+                    Parameters.add(new NameAndType(formalParameterContext.ID().getText(), new PrimitiveStructOrArrayType(ScopeBase.getTupleName(tupleTypes))));
+                }
             }
         }
 
@@ -1725,7 +1824,26 @@ public class ASMGenerationVisitor extends UISCBaseVisitor<String> {
 
         if (ctx.formalParameters() != null) {
             for (UISCParser.FormalParameterContext formalParameterContext : ctx.formalParameters().formalParameter()) {
-                getCurrentScope().declareSymbol(formalParameterContext.ID().getText(), PrimitiveType.getByKeyword(formalParameterContext.type().getText()));
+                ///////
+                if(formalParameterContext.type().primitiveType() != null) {
+                    getCurrentScope().declareSymbol(formalParameterContext.ID().getText(), PrimitiveType.getByKeyword(formalParameterContext.type().getText()));
+                } else if(formalParameterContext.type().structType() != null) {
+
+                } else if(formalParameterContext.type().tupleType() != null) {
+
+                    ArrayList<PrimitiveStructOrArrayType> tupleTypes = new ArrayList<>();
+                    for (UISCParser.TypeContext type : formalParameterContext.type().tupleType().type()) {
+                        if (type.primitiveType() == null) {
+                            throw new UnsupportedOperationException("Non-primitive tuples are not currently supported");
+                        }
+
+                        tupleTypes.add(new PrimitiveStructOrArrayType(type.pointer() == null ? PrimitiveType.getByKeyword(type.primitiveType().getText()) : PrimitiveType.getByKeyword(type.primitiveType().getText()).toPointer()));
+                    }
+
+                   //
+                }
+
+                ///////////////////////////////////////////////
             }
         }
 

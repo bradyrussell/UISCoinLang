@@ -369,6 +369,55 @@ public class CompilerTest {
     }
 
     @Test
+    public void Test_Tuple() {
+        String Script =
+                "(int32, int64, float) x = (1,2,3.14159265359);\n" +
+                "x = (3, 4, 5);\n" +
+                "int32 y = x.t0;\n " +
+                "y = (auto)x.t1;\n";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), "[0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 64, -96, 0, 0] [0, 0, 0, 4]");
+    }
+
+    @Test
+    public void Test_TupleParameter() {
+        String Script =
+                "int32 addTuple((int,int) x) {\n" +
+                        "\treturn x.t0 + x.t1;\n" +
+                        "}\n" +
+                        "int z = addTuple((1,2));\n";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
+    public void Test_StructParameter() {
+        String Script =
+                "struct z {\n" +
+                        "int32 y;\n" +
+                        "int64 x;\n" +
+                        "}\n" +
+                        "int32 a(z b) {\n" +
+                        "\treturn b.y;\n" +
+                        "}\n" +
+                        "z p;\n" +
+                        "p.y = 12;\n" +
+                        "p.x = 13;\n" +
+                        "int32 g = a(p);";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
+    public void Test_TupleCast() {
+        String Script =
+                "int64 a = 12;\n" +
+                        "int32 x = (((int32,int32))a).t0;";
+
+        performStandardTests(ASMUtil.compileHLLToASM(Script), null);
+    }
+
+    @Test
     public void Test_OpAndAssignment() {
         String Script =
                 "int32 a = 123;\n" +

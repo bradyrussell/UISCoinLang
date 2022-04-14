@@ -43,7 +43,7 @@ public enum PrimitiveType {
             }
         }
         //return null;
-        throw new IllegalArgumentException(Keyword+" is not a valid type!");
+        throw new IllegalArgumentException(Keyword+" is not a valid primitive type!");
     }
 
     public static PrimitiveType deduceTypeOfNumber(String NumberString){

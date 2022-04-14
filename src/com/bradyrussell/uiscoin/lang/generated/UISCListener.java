@@ -117,6 +117,16 @@ public interface UISCListener extends ParseTreeListener {
 	 */
 	void exitStructType(UISCParser.StructTypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UISCParser#tupleType}.
+	 * @param ctx the parse tree
+	 */
+	void enterTupleType(UISCParser.TupleTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UISCParser#tupleType}.
+	 * @param ctx the parse tree
+	 */
+	void exitTupleType(UISCParser.TupleTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UISCParser#inferredType}.
 	 * @param ctx the parse tree
 	 */
@@ -702,6 +712,18 @@ public interface UISCListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code tupleExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTupleExpression(UISCParser.TupleExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code tupleExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTupleExpression(UISCParser.TupleExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code sizeOfExpression}
 	 * labeled alternative in {@link UISCParser#expression}.

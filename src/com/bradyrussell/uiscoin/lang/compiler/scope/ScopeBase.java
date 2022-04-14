@@ -6,10 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.bradyrussell.uiscoin.lang.compiler.symbol.*;
-import com.bradyrussell.uiscoin.lang.compiler.type.NameAndType;
-import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
-import com.bradyrussell.uiscoin.lang.compiler.type.StructDefinition;
-import com.bradyrussell.uiscoin.lang.compiler.type.TypedValue;
+import com.bradyrussell.uiscoin.lang.compiler.type.*;
 
 public class ScopeBase {
     public String ScopeName = "AnonymousScope";
@@ -57,6 +54,25 @@ public class ScopeBase {
         return true;
     }
 
+    public static String getTupleName(List<PrimitiveStructOrArrayType> Fields) {
+        StringBuilder sb = new StringBuilder("tuple");
+        for (PrimitiveStructOrArrayType field : Fields) {
+            sb.append("_").append(field.getRepresentation());
+        }
+        return sb.toString();
+    }
+
+    public boolean defineTuple(List<PrimitiveStructOrArrayType> Fields){
+        if(getRootScope().structDefinitions.containsKey(getTupleName(Fields))) return false;
+        ArrayList<NameAndType> namedTypes = new ArrayList<>();
+        for (int i = 0; i < Fields.size(); i++) {
+            namedTypes.add(new NameAndType("t"+i, Fields.get(i)));
+        }
+        getRootScope().structDefinitions.put(getTupleName(Fields),new StructDefinition(this, namedTypes));
+        System.out.println("[Scope] Defined tuple "+getTupleName(Fields)+" with "+Fields.size()+" fields.");
+        return true;
+    }
+
     public int declareSymbol(String Name, PrimitiveType SymbolType){
         if(symbolTable.containsKey(Name)) return -1;
         symbolTable.put(Name, new SymbolBase(SymbolType, ScopeAddress++));
@@ -73,6 +89,14 @@ public class ScopeBase {
 
         symbolTable.put(Name, new SymbolStruct(ScopeAddress++, findStructDefinition(StructType)));
         System.out.println("[Scope] Declared struct symbol "+Name+" of type "+StructType+" at address "+(ScopeAddress-1));
+        return ScopeAddress-1;
+    }
+
+    public int declareTuple(String Name, List<PrimitiveStructOrArrayType> Types){
+        if(symbolTable.containsKey(Name)) return -1;
+        defineTuple(Types);
+        symbolTable.put(Name, new SymbolStruct(ScopeAddress++, getRootScope().structDefinitions.get(getTupleName(Types))));
+        System.out.println("[Scope] Declared tuple symbol "+Name+" of type "+getTupleName(Types)+" at address "+(ScopeAddress-1));
         return ScopeAddress-1;
     }
 
@@ -112,6 +136,14 @@ public class ScopeBase {
                 ", ScopeAddress=" + ScopeAddress +
                 ", ScopeBaseAddress=" + ScopeBaseAddress +
                 '}';
+    }
+
+    public ScopeBase getRootScope() {
+        if(Parent == null) {
+            return this;
+        }
+
+        return Parent.getRootScope();
     }
 
     public ScopeBase findScopeContaining(String Name) {

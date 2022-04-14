@@ -1,6 +1,7 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.compiler.type;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.bradyrussell.uiscoin.lang.compiler.scope.ScopeBase;
@@ -39,6 +40,10 @@ public class PrimitiveStructOrArrayType {
         StructName = structName;
     }
 
+    public PrimitiveStructOrArrayType(List<PrimitiveStructOrArrayType> types) {
+        StructName = ScopeBase.getTupleName(types);
+    }
+
     public PrimitiveStructOrArrayType(String structName, int arrayLength) {
         ArrayLength = arrayLength;
         StructName = structName;
@@ -70,10 +75,12 @@ public class PrimitiveStructOrArrayType {
         return Objects.hash(PrimitiveType, ArrayLength, StructName);
     }
 
+    public String getRepresentation() {
+        return isStructArray() ? (StructName+"Array["+ArrayLength+"]") : isStruct() ? StructName : isArray() ? (PrimitiveType +"Array["+ArrayLength+"]") : PrimitiveType.toString();
+    }
+
     @Override
     public String toString() {
-        String type = isStructArray() ? (StructName+"Array["+ArrayLength+"]") : isStruct() ? StructName : isArray() ? (PrimitiveType +"Array["+ArrayLength+"]") : PrimitiveType.toString();
-
-        return "PrimitiveStructOrArrayType{"+ type +"}";
+        return "PrimitiveStructOrArrayType{"+ getRepresentation() +"}";
     }
 }

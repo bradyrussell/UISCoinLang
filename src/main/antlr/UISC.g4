@@ -23,7 +23,7 @@ structDeclaration
     :   'struct' ID '{' varDeclaration+ '}'
     ;
 
-type:   (primitiveType | structType | inferredType) pointer?;
+type:   (primitiveType | structType | inferredType | tupleType) pointer?;
 
 primitiveType:
     'void' | 'byte' | 'int32' | 'int64' | 'float'
@@ -31,6 +31,10 @@ primitiveType:
 
 structType:
     ID
+    ;
+
+tupleType:
+    '(' type (',' type)+ ')'
     ;
 
 inferredType:
@@ -151,11 +155,10 @@ expression:
     |   STRING                                                              #stringLiteralExpression        // strings are byte arrays
     |   CHAR                                                                #charLiteralExpression
     |   '(' expression ')'                                                  #parenExpression
+    |   '(' expression (',' expression)+ ')'                                #tupleExpression
     | condition=expression '?' iftrue=expression ':' iffalse=expression     #ternaryExpression
     ;
 exprList : expression (',' expression)* ;   // arg list
-
-
 
 
 //have to reserve keywords here so they arent parsed as struct names?

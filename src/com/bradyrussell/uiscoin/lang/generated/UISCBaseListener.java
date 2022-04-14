@@ -137,6 +137,18 @@ public class UISCBaseListener implements UISCListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTupleType(UISCParser.TupleTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTupleType(UISCParser.TupleTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterInferredType(UISCParser.InferredTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -756,6 +768,18 @@ public class UISCBaseListener implements UISCListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTupleExpression(UISCParser.TupleExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTupleExpression(UISCParser.TupleExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,6 +1,7 @@
 /* (C) Brady Russell 2021 */
 package com.bradyrussell.uiscoin.lang.compiler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bradyrussell.uiscoin.lang.compiler.exception.CompilerErrorException;
@@ -13,6 +14,7 @@ import com.bradyrussell.uiscoin.lang.compiler.symbol.SymbolFunction;
 import com.bradyrussell.uiscoin.lang.compiler.symbol.SymbolStruct;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveStructOrArrayType;
 import com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType;
+import com.bradyrussell.uiscoin.lang.compiler.type.StructDefinition;
 import com.bradyrussell.uiscoin.lang.compiler.type.TypedValue;
 import com.bradyrussell.uiscoin.lang.generated.UISCParser;
 
@@ -377,6 +379,15 @@ public class ASMGenPrimitiveTypeVisitor extends ASMGenSubVisitorBase<PrimitiveTy
         if (symbol == null) {
             System.out.println("Array " + ctx.ID().getText() + " was not properly defined in this scope.");
             return null;
+        }
+
+        if(symbol instanceof SymbolStruct) {
+            StructDefinition structDefinition = ((SymbolStruct) symbol).struct;
+            TypedValue constExpr = new ConstantExpressionVisitor().visit(ctx.expression());
+            if(constExpr != null) {
+                return structDefinition.getOrderedTypes().get(constExpr.intValue).PrimitiveType;
+            }
+            return PrimitiveType.Void;
         }
 
         return symbol.type/*.fromArray()*/;

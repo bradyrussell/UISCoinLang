@@ -76,6 +76,12 @@ public interface UISCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStructType(UISCParser.StructTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UISCParser#tupleType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTupleType(UISCParser.TupleTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UISCParser#inferredType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -420,6 +426,13 @@ public interface UISCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNativeCallExpression(UISCParser.NativeCallExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code tupleExpression}
+	 * labeled alternative in {@link UISCParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTupleExpression(UISCParser.TupleExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code sizeOfExpression}
 	 * labeled alternative in {@link UISCParser#expression}.

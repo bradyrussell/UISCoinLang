@@ -19,8 +19,8 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":9,"i17":10,"i18":10,"i19":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -194,7 +194,7 @@ extends java.lang.Object</pre>
 </a>
 <h2>Method Summary</h2>
 <div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
+<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
 <div id="memberSummary_tabpanel" role="tabpanel">
 <table aria-labelledby="t0">
 <thead>
@@ -231,64 +231,85 @@ java.lang.String&nbsp;StructType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#declareTuple(java.lang.String,java.util.List)">declareTuple</a></span>&#8203;(java.lang.String&nbsp;Name,
+java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Types)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code><a href="ScopeLocal.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeLocal</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#defineFunction(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType,java.util.List)">defineFunction</a></span>&#8203;(java.lang.String&nbsp;Name,
 <a href="../type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;SymbolType,
 java.util.List&lt;<a href="../type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;Parameters)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#defineStruct(java.lang.String,java.util.List)">defineStruct</a></span>&#8203;(java.lang.String&nbsp;Name,
 java.util.List&lt;<a href="../type/NameAndType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">NameAndType</a>&gt;&nbsp;Fields)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i7">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#defineTuple(java.util.List)">defineTuple</a></span>&#8203;(java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Fields)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i8">
 <td class="colFirst"><code><a href="ScopeBase.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeBase</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findScopeContaining(java.lang.String)">findScopeContaining</a></span>&#8203;(java.lang.String&nbsp;Name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code><a href="../type/StructDefinition.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">StructDefinition</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findStructDefinition(java.lang.String)">findStructDefinition</a></span>&#8203;(java.lang.String&nbsp;StructType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllocation()">getAllocation</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDeallocation()">getDeallocation</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDepth()">getDepth</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRecursiveAllocation()">getRecursiveAllocation</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="altColor" id="i14">
+<td class="colFirst"><code><a href="ScopeBase.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeBase</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRootScope()">getRootScope</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSymbol(java.lang.String)">getSymbol</a></span>&#8203;(java.lang.String&nbsp;Name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="altColor" id="i16">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTupleName(java.util.List)">getTupleName</a></span>&#8203;(java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Fields)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasSymbol(java.lang.String)">hasSymbol</a></span>&#8203;(java.lang.String&nbsp;Name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -407,6 +428,18 @@ java.util.List&lt;<a href="../type/NameAndType.html" title="class in com.bradyru
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="getTupleName(java.util.List)">getTupleName</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">getTupleName</span>&#8203;(<span class="arguments">java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Fields)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="defineTuple(java.util.List)">defineTuple</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">defineTuple</span>&#8203;(<span class="arguments">java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Fields)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="declareSymbol(java.lang.String,com.bradyrussell.uiscoin.lang.compiler.type.PrimitiveType)">declareSymbol</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">declareSymbol</span>&#8203;(<span class="arguments">java.lang.String&nbsp;Name,
 <a href="../type/PrimitiveType.html" title="enum in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveType</a>&nbsp;SymbolType)</span></div>
@@ -417,6 +450,13 @@ java.util.List&lt;<a href="../type/NameAndType.html" title="class in com.bradyru
 <h3><a id="declareStruct(java.lang.String,java.lang.String)">declareStruct</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">declareStruct</span>&#8203;(<span class="arguments">java.lang.String&nbsp;Name,
 java.lang.String&nbsp;StructType)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="declareTuple(java.lang.String,java.util.List)">declareTuple</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">declareTuple</span>&#8203;(<span class="arguments">java.lang.String&nbsp;Name,
+java.util.List&lt;<a href="../type/PrimitiveStructOrArrayType.html" title="class in com.bradyrussell.uiscoin.lang.compiler.type">PrimitiveStructOrArrayType</a>&gt;&nbsp;Types)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -460,6 +500,12 @@ int&nbsp;Length)</span></div>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
 </dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="getRootScope()">getRootScope</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ScopeBase.html" title="class in com.bradyrussell.uiscoin.lang.compiler.scope">ScopeBase</a></span>&nbsp;<span class="memberName">getRootScope</span>()</div>
 </section>
 </li>
 <li class="blockList">
